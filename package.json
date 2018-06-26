@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "Simple, declarative scaffolding",
   "main": "index.js",
+  "bin": "./bin/scf.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -19,5 +20,16 @@
   "bugs": {
     "url": "https://github.com/dworthen/scf/issues"
   },
-  "homepage": "https://github.com/dworthen/scf#readme"
+  "homepage": "https://github.com/dworthen/scf#readme",
+  "devDependencies": {
+    "standard-version": "^4.4.0"
+  },
+  "dependencies": {
+    "caporal": "^0.10.0",
+    "es6-template-strings": "^2.0.1",
+    "find-up": "^3.0.0",
+    "inquirer": "^6.0.0",
+    "shelljs": "^0.8.2",
+    "yaml-front-matter": "^4.0.0"
+  }
 }
