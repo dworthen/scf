@@ -14,6 +14,7 @@ prog
     undefined,
     "templates"
   )
+  .option("-f, --force", "overwrite existing files", prog.BOOLEAN, false)
   .action(scf);
 
 prog.parse(process.argv);

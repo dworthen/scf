@@ -151,6 +151,14 @@ class Scaffolder {
   }
 
   copyFile(fileData) {
+    if (fs.existsSync(fileData._filePath) && !this.options.force) {
+      this.logger.warn({
+        warn: `Skip creating ${
+          fileData._filePath
+        } as file already exists. Run with --force to overwrite existing files.`
+      });
+      return;
+    }
     this.logger.info({ info: `Creating ${fileData._filePath}` });
     let content = fileData.__content || "";
     delete fileData.__content;
