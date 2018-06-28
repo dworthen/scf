@@ -8,11 +8,11 @@ prog
   .version(version)
   .command("create", "Scaffold code")
   .argument("<name>", "Name of template to scaffold.")
-  .argument(
-    "[templates-directory]",
+  .option(
+    "--templates-directory [templates-directory]",
     "Directory where templates are stored.",
     undefined,
-    "./templates"
+    "templates"
   )
   .action(scf);
 

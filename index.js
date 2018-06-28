@@ -6,24 +6,19 @@ const template = require("es6-template-strings");
 const frontMatter = require("yaml-front-matter");
 const findUp = require("find-up");
 
-const cwd = shell.pwd().toString();
-let packageDir = null;
-
 shell.config.silent = true;
 
 module.exports = async (args, options, logger) => {
-  packageDir = path.relative(
-    cwd,
-    path.dirname(findUp.sync(args.templatesDirectory) || cwd)
-  );
   logger.debug({ debug: "Command arguments:" });
   logger.debug(args);
   logger.debug({ debug: "Command options:" });
   logger.debug(options);
 
   const scaffolder = new Scaffolder(
-    path.join(args.templatesDirectory, args.name),
-    logger
+    options.templatesDirectory,
+    args.name,
+    logger,
+    options
   );
   scaffolder.globals = await scaffolder.prompt(
     scaffolder.globalsPath,
@@ -36,24 +31,30 @@ module.exports = async (args, options, logger) => {
 };
 
 class Scaffolder {
-  constructor(templateDir, logger) {
+  constructor(templateDir, templateName, logger, options) {
     this.logger = logger;
+    this.options = options;
 
-    this.templateDir = path.join(packageDir, templateDir);
-    this.templateDir = shell.test("-d", this.templateDir)
-      ? this.templateDir
-      : path.join(__dirname, templateDir);
+    this.cwd = shell.pwd().toString();
+    this.templateName = templateName;
+    this.globalTemplatesPath = path.resolve(__dirname, "./templates");
+    this.localTemplatesPath = findUp.sync(templateDir);
 
-    this.globals = null;
+    this.template = this.localTemplatesPath
+      ? path.resolve(this.localTemplatesPath, templateName)
+      : path.resolve(this.globalTemplatesPath, templateName);
 
-    if (!shell.test("-d", path.resolve(this.templateDir))) {
-      throw new Error(
-        `${this.templateDir} does not exist or is not a directory.`
-      );
+    logger.debug({ debug: "template directories:" });
+    logger.debug({ globalTemplatesPath: this.globalTemplatesPath });
+    logger.debug({ localTemplatesPath: this.localTemplatesPath });
+    logger.debug({ template: this.template });
+
+    if (!shell.test("-d", path.resolve(this.template))) {
+      throw new Error(`${this.template} does not exist or is not a directory.`);
     }
 
     this.globals = [];
-    this.globalsPath = path.join(this.templateDir, "globals.{yml,yaml,json}");
+    this.globalsPath = path.resolve(this.template, "globals.{yml,yaml}");
 
     const globalFiles = shell.ls(path.resolve(this.globalsPath));
     for (const file of globalFiles) {
@@ -78,8 +79,8 @@ class Scaffolder {
     let yamlFront = frontMatter.loadFront(contents);
     let yaml = Array.isArray(yamlFront)
       ? yamlFront
-      : yamlFront && yamlFront.data
-        ? yamlFront.data
+      : yamlFront && yamlFront.prompts
+        ? yamlFront.prompts
         : [];
 
     yaml["__content"] =
@@ -121,9 +122,9 @@ class Scaffolder {
     });
   }
 
-  copyDirectory(srcPath, destinationPath) {
+  copyDirectory(destinationPath) {
     this.logger.info({ info: `Creating ${destinationPath}.` });
-    shell.mkdir("-p", path.resolve(cwd, destinationPath));
+    shell.mkdir("-p", path.resolve(this.cwd, destinationPath));
   }
 
   generateFileData(filePath, fileData) {
@@ -136,9 +137,9 @@ class Scaffolder {
       fileData
     );
     fileData._filePath = path.resolve(
-      cwd,
+      this.cwd,
       path.relative(
-        this.templateDir,
+        this.template,
         path.join(path.dirname(filePath), fileData._filename)
       )
     );
@@ -149,7 +150,7 @@ class Scaffolder {
     return fileData;
   }
 
-  copyFile(srcPath, fileData) {
+  copyFile(fileData) {
     this.logger.info({ info: `Creating ${fileData._filePath}` });
     let content = fileData.__content || "";
     delete fileData.__content;
@@ -158,12 +159,12 @@ class Scaffolder {
   }
 
   async scaffold() {
-    const files = shell.ls("-R", this.templateDir);
+    const files = shell.ls("-R", this.template);
     for (const file of files) {
       if (/globals.(ya?ml|json)$/i.test(file)) continue;
-      const filePath = path.join(this.templateDir, file);
+      const filePath = path.join(this.template, file);
       if (shell.test("-d", filePath)) {
-        this.copyDirectory(filePath, path.relative(this.templateDir, filePath));
+        this.copyDirectory(path.relative(this.template, filePath));
       }
 
       if (shell.test("-f", filePath)) {
@@ -174,7 +175,7 @@ class Scaffolder {
         let fileData = await this.prompt(filePath, questions);
         fileData.__content = content;
         fileData = this.generateFileData(filePath, fileData);
-        this.copyFile(filePath, fileData);
+        this.copyFile(fileData);
       }
     }
   }
