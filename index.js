@@ -132,47 +132,52 @@ class Scaffolder {
       {},
       this.globals,
       {
-        _filename: path.basename(filePath, ".tmpl")
+        __path: path.parse(path.resolve(filePath))
       },
       fileData
     );
-    fileData._filePath = path.resolve(
-      this.cwd,
-      path.relative(
-        this.template,
-        path.join(path.dirname(filePath), fileData._filename)
-      )
-    );
-    fileData._ext = path.extname(fileData._filename);
-    fileData._basename = path.basename(fileData._filename, fileData._ext);
-    this.logger.debug({ debug: `File data for ${fileData._filePath}` });
+
+    if (fileData._filename) {
+      fileData.__path.base = fileData._filename || fileData.__path.base;
+      fileData.__path = path.parse(path.format(fileData.__path));
+      delete fileData._filename;
+    }
+
+    this.logger.debug({
+      debug: `File data for ${path.join(
+        fileData.__path.dir,
+        fileData.__path.name
+      )}`
+    });
     this.logger.debug(fileData);
     return fileData;
   }
 
   copyFile(fileData) {
-    if (fs.existsSync(fileData._filePath) && !this.options.force) {
+    let filePath = path.relative(
+      this.cwd,
+      path.resolve(fileData.__path.dir, fileData.__path.base)
+    );
+    if (fs.existsSync(filePath) && !this.options.force) {
       this.logger.warn({
-        warn: `Skip creating ${
-          fileData._filePath
-        } as file already exists. Run with --force to overwrite existing files.`
+        warn: `Skip creating ${filePath} as file already exists. Run with --force to overwrite existing files.`
       });
       return;
     }
-    this.logger.info({ info: `Creating ${fileData._filePath}` });
-    let content = fileData.__content || "";
-    delete fileData.__content;
-    content = template(content, fileData);
-    fs.writeFileSync(fileData._filePath, content.trim(), "utf8");
+    this.logger.info({ info: `Creating ${filePath}` });
+    let content = template(fileData.__content || "", fileData);
+    // delete fileData.__content;
+    fs.writeFileSync(filePath, content.trim(), "utf8");
   }
 
   async scaffold() {
     const files = shell.ls("-R", this.template);
     for (const file of files) {
       if (/globals.(ya?ml|json)$/i.test(file)) continue;
-      const filePath = path.join(this.template, file);
+      const filePath = path.resolve(path.join(this.template, file));
+      const localPath = path.relative(this.template, filePath);
       if (shell.test("-d", filePath)) {
-        this.copyDirectory(path.relative(this.template, filePath));
+        this.copyDirectory(localPath);
       }
 
       if (shell.test("-f", filePath)) {
@@ -182,7 +187,7 @@ class Scaffolder {
         delete questions.__content;
         let fileData = await this.prompt(filePath, questions);
         fileData.__content = content;
-        fileData = this.generateFileData(filePath, fileData);
+        fileData = this.generateFileData(localPath, fileData);
         this.copyFile(fileData);
       }
     }
