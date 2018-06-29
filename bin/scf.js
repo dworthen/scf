@@ -3,6 +3,7 @@
 const version = require("../package.json").version;
 const prog = require("caporal");
 const scf = require("../index.js");
+const link = require("../link");
 
 prog
   .version(version)
@@ -16,5 +17,11 @@ prog
   )
   .option("-f, --force", "overwrite existing files", prog.BOOLEAN, false)
   .action(scf);
+
+prog
+  .command("link", "Link current directory to global templates directory")
+  .argument("[src]", "Source directory", undefined, ".")
+  .argument("[as]", "Global Template name", undefined, null)
+  .action(link);
 
 prog.parse(process.argv);

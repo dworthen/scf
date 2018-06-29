@@ -37,19 +37,30 @@ class Scaffolder {
 
     this.cwd = shell.pwd().toString();
     this.templateName = templateName;
-    this.globalTemplatesPath = path.resolve(__dirname, "./templates");
+    this.globalTemplatesPath = path.resolve(
+      __dirname,
+      "./templates",
+      templateName
+    );
     this.localTemplatesPath = findUp.sync(templateDir);
-
-    this.template = this.localTemplatesPath
+    this.localTemplatesPath = this.localTemplatesPath
       ? path.resolve(this.localTemplatesPath, templateName)
-      : path.resolve(this.globalTemplatesPath, templateName);
+      : null;
+
+    // this.template = this.localTemplatesPath
+    //   ? path.resolve(this.localTemplatesPath, templateName)
+    //   : path.resolve(this.globalTemplatesPath, templateName);
+
+    this.template = shell.test("-e", this.localTemplatesPath)
+      ? this.localTemplatesPath
+      : this.globalTemplatesPath;
 
     logger.debug({ debug: "template directories:" });
     logger.debug({ globalTemplatesPath: this.globalTemplatesPath });
     logger.debug({ localTemplatesPath: this.localTemplatesPath });
     logger.debug({ template: this.template });
 
-    if (!shell.test("-d", path.resolve(this.template))) {
+    if (!shell.test("-d", this.template) || !shell.test("-L", this.template)) {
       throw new Error(`${this.template} does not exist or is not a directory.`);
     }
 
