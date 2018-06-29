@@ -2,7 +2,7 @@ const path = require("path");
 const shell = require("shelljs");
 
 module.exports = (args, options, logger) => {
-  let link = new Link(args.src, args.as, logger);
+  let link = new Link(args.src, args.as, options, logger);
 };
 
 class Link {
@@ -18,7 +18,20 @@ class Link {
 
     this.template = path.resolve(this.globalTemplatesPath, this.templateName);
 
+    if (shell.test("-e", this.template) && !this.options.force) {
+      this.logger.warn({
+        warn: `${
+          this.template
+        } already exist. Run with --force to overwrite existing link.`
+      });
+      return;
+    }
+
+    this.logger.info({
+      info: `Linking ${this.template}.`
+    });
+
     shell.mkdir("-p", this.globalTemplatesPath);
-    shell.ln("-s", this.src, this.template);
+    shell.ln("-sf", this.src, this.template);
   }
 }

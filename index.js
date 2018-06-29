@@ -186,7 +186,9 @@ class Scaffolder {
     for (const file of files) {
       if (/globals.(ya?ml|json)$/i.test(file)) continue;
       const filePath = path.resolve(path.join(this.template, file));
-      const localPath = path.relative(this.template, filePath);
+      const localPath = this.options.flatten
+        ? path.relative(this.cwd, path.basename(file))
+        : path.relative(this.template, filePath);
       if (shell.test("-d", filePath)) {
         this.copyDirectory(localPath);
       }
