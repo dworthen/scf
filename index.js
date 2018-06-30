@@ -20,10 +20,14 @@ module.exports = async (args, options, logger) => {
     logger,
     options
   );
-  scaffolder.globals = await scaffolder.prompt(
-    scaffolder.globalsPath,
-    scaffolder.globals
-  );
+  if (
+    scaffolder.globals.length
+  ) {
+    scaffolder.globals = await scaffolder.prompt(
+      scaffolder.globalsPath,
+      scaffolder.globals
+    );
+  }
   // delete scaffolder.globals.__content;
   logger.debug({ debug: "Globals:" });
   logger.debug(scaffolder.globals);
@@ -51,18 +55,19 @@ class Scaffolder {
     //   ? path.resolve(this.localTemplatesPath, templateName)
     //   : path.resolve(this.globalTemplatesPath, templateName);
 
-    this.template = shell.test("-e", this.localTemplatesPath)
-      ? this.localTemplatesPath
-      : this.globalTemplatesPath;
+    this.template =
+      this.localTemplatesPath && shell.test("-e", this.localTemplatesPath)
+        ? this.localTemplatesPath
+        : this.globalTemplatesPath;
 
-    logger.debug({ debug: "template directories:" });
-    logger.debug({ globalTemplatesPath: this.globalTemplatesPath });
-    logger.debug({ localTemplatesPath: this.localTemplatesPath });
-    logger.debug({ template: this.template });
-
-    if (!shell.test("-d", this.template) || !shell.test("-L", this.template)) {
+    if (!shell.test("-d", this.template) && !shell.test("-L", this.template)) {
       throw new Error(`${this.template} does not exist or is not a directory.`);
     }
+
+    logger.debug({ debug: "template directory:" });
+    // logger.debug({ globalTemplatesPath: this.globalTemplatesPath });
+    // logger.debug({ localTemplatesPath: this.localTemplatesPath });
+    logger.debug({ templateDir: this.template });
 
     this.globals = [];
     this.globalsPath = path.resolve(this.template, "globals.{yml,yaml}");
@@ -143,13 +148,13 @@ class Scaffolder {
       {},
       this.globals,
       {
-        __path: path.parse(path.resolve(filePath))
+        __path: path.parse(filePath)
       },
       fileData
     );
 
     if (fileData._filename) {
-      fileData.__path.base = fileData._filename || fileData.__path.base;
+      fileData.__path.base = fileData._filename;
       fileData.__path = path.parse(path.format(fileData.__path));
       delete fileData._filename;
     }
@@ -187,8 +192,8 @@ class Scaffolder {
       if (/globals.(ya?ml|json)$/i.test(file)) continue;
       const filePath = path.resolve(path.join(this.template, file));
       const localPath = this.options.flatten
-        ? path.relative(this.cwd, path.basename(file))
-        : path.relative(this.template, filePath);
+        ? path.relative(this.cwd, path.basename(file, ".tmpl"))
+        : path.relative(this.template, path.resolve(this.template, path.dirname(file), path.basename(file, ".tmpl")));
       if (shell.test("-d", filePath)) {
         this.copyDirectory(localPath);
       }
