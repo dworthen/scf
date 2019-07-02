@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.0.1"></a>
+## [1.0.1](https://github.com/dworthen/scf/compare/v1.0.0...v1.0.1) (2019-07-02)
+
+
+### Bug Fixes
+
+* Bug in installing templates without name ([0c932d6](https://github.com/dworthen/scf/commit/0c932d6))
+* Bug in scaffolding global installed templates ([19521f3](https://github.com/dworthen/scf/commit/19521f3))
+
+
+
 <a name="1.0.0"></a>
 # [1.0.0](https://github.com/dworthen/scf/compare/v0.2.0...v1.0.0) (2019-07-02)
 
