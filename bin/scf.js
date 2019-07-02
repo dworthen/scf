@@ -5,10 +5,11 @@ const prog = require("caporal");
 const scf = require("../index.js");
 const link = require("../link");
 const list = require("../list");
+const install = require("../install");
 
 prog
   .version(version)
-  .command("create", "Scaffold code")
+  .command("create", "Scaffold out template")
   .argument("<name>", "Name of template to scaffold.")
   .option(
     "--templates-directory [templates-directory]",
@@ -40,7 +41,31 @@ prog
     undefined,
     "templates"
   )
-  .option("-g, --global", "List globally installed templates", prog.BOOLEAN, false)
+  .option(
+    "-g, --global",
+    "List globally installed templates",
+    prog.BOOLEAN,
+    false
+  )
   .action(list);
+
+prog
+  .command("install", "Install template")
+  .argument("<src>", "Template to install")
+  .argument("[as]", "Template name", undefined, null)
+  .option("-f, --force", "overwrite existing template", prog.BOOLEAN, false)
+  .option(
+    "--templates-directory [templates-directory]",
+    "Local directory where templates are stored.",
+    undefined,
+    "templates"
+  )
+  .option(
+    "-g, --global",
+    "List globally installed templates",
+    prog.BOOLEAN,
+    false
+  )
+  .action(install);
 
 prog.parse(process.argv);

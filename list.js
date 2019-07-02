@@ -1,4 +1,4 @@
-const fs = require('fs');
+const fs = require("fs");
 const path = require("path");
 const shell = require("shelljs");
 const findUp = require("find-up");
@@ -15,7 +15,9 @@ class List {
     this.globalTemplatesPath = path.resolve(__dirname, "./templates");
     this.localTemplatesPath = findUp.sync(this.options.templatesDirectory);
 
-    this.templates = fs.readdirSync(this.options.global ? this.globalTemplatesPath : this.localTemplatesPath);
+    this.templates = fs.readdirSync(
+      this.options.global ? this.globalTemplatesPath : this.localTemplatesPath
+    );
   }
 
   list() {

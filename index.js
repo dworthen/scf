@@ -20,9 +20,7 @@ module.exports = async (args, options, logger) => {
     logger,
     options
   );
-  if (
-    scaffolder.globals.length
-  ) {
+  if (scaffolder.globals.length) {
     scaffolder.globals = await scaffolder.prompt(
       scaffolder.globalsPath,
       scaffolder.globals
@@ -96,8 +94,8 @@ class Scaffolder {
     let yaml = Array.isArray(yamlFront)
       ? yamlFront
       : yamlFront && yamlFront.prompts
-        ? yamlFront.prompts
-        : [];
+      ? yamlFront.prompts
+      : [];
 
     yaml["__content"] =
       yamlFront && yamlFront.__content ? yamlFront.__content : "";
@@ -193,7 +191,14 @@ class Scaffolder {
       const filePath = path.resolve(path.join(this.template, file));
       const localPath = this.options.flatten
         ? path.relative(this.cwd, path.basename(file, ".tmpl"))
-        : path.relative(this.template, path.resolve(this.template, path.dirname(file), path.basename(file, ".tmpl")));
+        : path.relative(
+            this.template,
+            path.resolve(
+              this.template,
+              path.dirname(file),
+              path.basename(file, ".tmpl")
+            )
+          );
       if (shell.test("-d", filePath)) {
         this.copyDirectory(localPath);
       }
