@@ -13,7 +13,7 @@ prog
   .command("create", "Scaffold out template")
   .argument("<name>", "Name of template to scaffold.")
   .option(
-    "--templates-directory [templates-directory]",
+    "-t, --templates-directory [templates-directory]",
     "Local directory where templates are stored.",
     undefined,
     ".scf-templates"
@@ -30,7 +30,7 @@ prog
 prog
   .command("init", "Initialize scf template directory")
   .option(
-    "--templates-directory [templates-directory]",
+    "-t, --templates-directory [templates-directory]",
     "Local directory where templates are stored.",
     undefined,
     ".scf-templates"
@@ -43,7 +43,7 @@ prog
   .argument("[as]", "Template name", undefined, null)
   .option("-f, --force", "overwrite existing template", prog.BOOLEAN, false)
   .option(
-    "--templates-directory [templates-directory]",
+    "-t, --templates-directory [templates-directory]",
     "Local directory where templates are stored.",
     undefined,
     ".scf-templates"
@@ -59,7 +59,7 @@ prog
 prog
   .command("list", "List available templates")
   .option(
-    "--templates-directory [templates-directory]",
+    "-t, --templates-directory [templates-directory]",
     "Local directory where templates are stored.",
     undefined,
     ".scf-templates"
