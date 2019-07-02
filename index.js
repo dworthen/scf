@@ -5,6 +5,7 @@ const prompt = require("inquirer").prompt;
 const template = require("es6-template-strings");
 const frontMatter = require("yaml-front-matter");
 const findUp = require("find-up");
+const globalTemplatesPath = require("./globalPath");
 
 shell.config.silent = true;
 
@@ -39,11 +40,7 @@ class Scaffolder {
 
     this.cwd = shell.pwd().toString();
     this.templateName = templateName;
-    this.globalTemplatesPath = path.resolve(
-      __dirname,
-      "./templates",
-      templateName
-    );
+    this.globalTemplatesPath = path.resolve(globalTemplatesPath, templateName);
     this.localTemplatesPath = findUp.sync(templateDir);
     this.localTemplatesPath = this.localTemplatesPath
       ? path.resolve(this.localTemplatesPath, templateName)
