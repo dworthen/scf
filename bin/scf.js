@@ -4,6 +4,7 @@ const version = require("../package.json").version;
 const prog = require("caporal");
 const scf = require("../index.js");
 const link = require("../link");
+const list = require("../list");
 
 prog
   .version(version)
@@ -11,7 +12,7 @@ prog
   .argument("<name>", "Name of template to scaffold.")
   .option(
     "--templates-directory [templates-directory]",
-    "Directory where templates are stored.",
+    "Local directory where templates are stored.",
     undefined,
     "templates"
   )
@@ -30,5 +31,16 @@ prog
   .argument("[as]", "Global Template name", undefined, null)
   .option("-f, --force", "overwrite existing link", prog.BOOLEAN, false)
   .action(link);
+
+prog
+  .command("list", "List available templates")
+  .option(
+    "--templates-directory [templates-directory]",
+    "Local directory where templates are stored.",
+    undefined,
+    "templates"
+  )
+  .option("-g, --global", "List globally installed templates", prog.BOOLEAN, false)
+  .action(list);
 
 prog.parse(process.argv);
