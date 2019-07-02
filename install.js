@@ -10,7 +10,7 @@ module.exports = (args, options, logger) => {
   let as = args.as;
 
   if (as === null) {
-    let template = args.src.split(path.sep);
+    let template = args.src.split("/");
     as = template[template.length - 1];
   }
 
