@@ -49,10 +49,6 @@ class Scaffolder {
       ? path.resolve(this.localTemplatesPath, templateName)
       : null;
 
-    // this.template = this.localTemplatesPath
-    //   ? path.resolve(this.localTemplatesPath, templateName)
-    //   : path.resolve(this.globalTemplatesPath, templateName);
-
     this.template =
       this.localTemplatesPath && shell.test("-e", this.localTemplatesPath)
         ? this.localTemplatesPath
@@ -63,8 +59,6 @@ class Scaffolder {
     }
 
     logger.debug({ debug: "template directory:" });
-    // logger.debug({ globalTemplatesPath: this.globalTemplatesPath });
-    // logger.debug({ localTemplatesPath: this.localTemplatesPath });
     logger.debug({ templateDir: this.template });
 
     this.globals = [];
