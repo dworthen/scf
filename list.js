@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const shell = require("shelljs");
 const findUp = require("find-up");
+const globalTemplatesPath = require("./globalPath");
 
 module.exports = (args, options, logger) => {
   let list = new List(options, logger);
@@ -12,11 +13,10 @@ class List {
   constructor(options, logger) {
     this.logger = logger;
     this.options = options;
-    this.globalTemplatesPath = path.resolve(__dirname, "./templates");
     this.localTemplatesPath = findUp.sync(this.options.templatesDirectory);
 
     this.templates = fs.readdirSync(
-      this.options.global ? this.globalTemplatesPath : this.localTemplatesPath
+      this.options.global ? globalTemplatesPath : this.localTemplatesPath
     );
   }
 

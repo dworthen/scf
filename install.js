@@ -3,6 +3,7 @@ const path = require("path");
 const shell = require("shelljs");
 const findUp = require("find-up");
 const degit = require("degit");
+const globalTemplatesPath = require("./globalPath");
 
 module.exports = (args, options, logger) => {
   let install = new Install(options, logger);
@@ -20,23 +21,25 @@ class Install {
   constructor(options, logger) {
     this.logger = logger;
     this.options = options;
-    this.globalTemplatesPath = path.resolve(__dirname, "./templates");
     this.localTemplatesPath = findUp.sync(this.options.templatesDirectory);
-
-    this.templates = fs.readdirSync(
-      this.options.global ? this.globalTemplatesPath : this.localTemplatesPath
-    );
   }
 
   install(src, as) {
     let dest = path.resolve(
-      this.options.global ? this.globalTemplatesPath : this.localTemplatesPath,
+      this.options.global ? globalTemplatesPath : this.localTemplatesPath,
       as
     );
 
+    if (shell.test("-e", dest) && !this.options.force) {
+      this.logger.info({
+        Error: `${dest} already exist. Run with --force to overwrite existing link.`
+      });
+      return;
+    }
+
     const emitter = degit(src, {
       cache: true,
-      force: this.options.force,
+      force: true,
       verbose: true
     });
 
