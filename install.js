@@ -38,7 +38,7 @@ class Install {
     }
 
     const emitter = degit(src, {
-      cache: true,
+      cache: false,
       force: true,
       verbose: true
     });
