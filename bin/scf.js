@@ -19,12 +19,6 @@ prog
     ".scf-templates"
   )
   .option("-f, --force", "overwrite existing files", prog.BOOLEAN, false)
-  .option(
-    "--flatten",
-    "Scaffold out files in flat directory structure",
-    prog.BOOLEAN,
-    false
-  )
   .action(scf);
 
 prog
