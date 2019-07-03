@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.0.0"></a>
+# [2.0.0](https://github.com/dworthen/scf/compare/v1.0.1...v2.0.0) (2019-07-03)
+
+
+### Bug Fixes
+
+* Remove unnecessary fs package ([c8d1116](https://github.com/dworthen/scf/commit/c8d1116))
+
+
+### Features
+
+* Add conditional scaffolding ([bda9e1c](https://github.com/dworthen/scf/commit/bda9e1c))
+* Change default local template directory ([7bce2c7](https://github.com/dworthen/scf/commit/7bce2c7))
+* Remove --flatten flag ([3856d00](https://github.com/dworthen/scf/commit/3856d00))
+
+
+### BREAKING CHANGES
+
+* Change local template directory from
+.scf-templates to .scf
+* Remove ability to scaffold out flat file structures
+from a directory structure.
+
+
+
 <a name="1.0.1"></a>
 ## [1.0.1](https://github.com/dworthen/scf/compare/v1.0.0...v1.0.1) (2019-07-02)
 
