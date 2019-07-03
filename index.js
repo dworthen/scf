@@ -6,8 +6,15 @@ const template = require("es6-template-strings");
 const frontMatter = require("yaml-front-matter");
 const findUp = require("find-up");
 const globalTemplatesPath = require("./globalPath");
+const operators = require("./operators");
+const ignore = require("ignore");
 
 shell.config.silent = true;
+
+const filenamePrompt = {
+  name: "filename",
+  message: "filename (with extension)"
+};
 
 module.exports = async (args, options, logger) => {
   logger.debug({ debug: "Command arguments:" });
@@ -15,195 +22,415 @@ module.exports = async (args, options, logger) => {
   logger.debug({ debug: "Command options:" });
   logger.debug(options);
 
-  const scaffolder = new Scaffolder(
-    options.templatesDirectory,
-    args.name,
-    logger,
-    options
-  );
-  if (scaffolder.globals.length) {
-    scaffolder.globals = await scaffolder.prompt(
-      scaffolder.globalsPath,
-      scaffolder.globals
-    );
-  }
-  // delete scaffolder.globals.__content;
-  logger.debug({ debug: "Globals:" });
-  logger.debug(scaffolder.globals);
+  const scaffolder = new Scaffolder(args, options, logger);
+
+  await scaffolder.processGlobals();
+
   await scaffolder.scaffold();
 };
 
 class Scaffolder {
-  constructor(templateDir, templateName, logger, options) {
-    this.logger = logger;
+  constructor(args, options, logger) {
+    this.debug = options.verbose;
+    this.args = args;
     this.options = options;
-
+    this.logger = logger;
     this.cwd = shell.pwd().toString();
-    this.templateName = templateName;
-    this.globalTemplatesPath = path.resolve(globalTemplatesPath, templateName);
-    this.localTemplatesPath = findUp.sync(templateDir);
-    this.localTemplatesPath = this.localTemplatesPath
-      ? path.resolve(this.localTemplatesPath, templateName)
-      : null;
+    this.globals = {};
+    this.filesMetaData = [];
+    this.fileMappings = {};
 
-    this.template =
-      this.localTemplatesPath && shell.test("-e", this.localTemplatesPath)
-        ? this.localTemplatesPath
-        : this.globalTemplatesPath;
+    this.localTemplatesPath = findUp.sync(this.options.templatesDirectory);
+    this.globalTemplatesPath = globalTemplatesPath;
 
-    if (!shell.test("-d", this.template) && !shell.test("-L", this.template)) {
-      throw new Error(`${this.template} does not exist or is not a directory.`);
-    }
-
-    logger.debug({ debug: "template directory:" });
-    logger.debug({ templateDir: this.template });
-
-    this.globals = [];
-    this.globalsPath = path.resolve(this.template, "globals.{yml,yaml}");
-
-    const globalFiles = shell.ls(path.resolve(this.globalsPath));
-    for (const file of globalFiles) {
-      if (shell.test("-f", file)) {
-        var contents = this.readFile(file);
-        if (!/^---\n/.test(contents)) {
-          contents = `---\n${contents.trim()}\n---`;
-        }
-        var fileDataArr = this.parseFile(file, contents);
-        this.globals = this.globals.concat(fileDataArr);
-      }
-    }
-  }
-
-  readFile(filePath) {
-    this.logger.debug({ debug: `Loading ${filePath}.` });
-    return fs.readFileSync(filePath, "utf8");
-  }
-
-  parseFile(filePath, contents) {
-    this.logger.debug({ debug: `Parsing prompts for ${filePath}` });
-    let yamlFront = frontMatter.loadFront(contents);
-    let yaml = Array.isArray(yamlFront)
-      ? yamlFront
-      : yamlFront && yamlFront.prompts
-      ? yamlFront.prompts
-      : [];
-
-    yaml["__content"] =
-      yamlFront && yamlFront.__content ? yamlFront.__content : "";
-
-    yaml.forEach((fileData, ind) => {
-      if (fileData.pattern) {
-        fileData.pattern =
-          typeof fileData.pattern == "string"
-            ? new RegExp(fileData.pattern)
-            : fileData.pattern;
-        if (!fileData.pattern instanceof RegExp) {
-          throw new TypeError(
-            `${filePath}[${ind}].pattern must be string|RegExp but recieved ${typeof fileData.pattern}.`
-          );
-        }
-
-        fileData.validate = function(input) {
-          return (
-            fileData.pattern.test(input) ||
-            `${input} does not satisfy ${fileData.pattern}`
-          );
-        };
-      }
-      // return fileData;
-    });
-    return yaml;
-  }
-
-  prompt(filePath, questions) {
-    this.logger.info({ info: `Prompts for ${filePath}` });
-    if (!Array.isArray(questions)) {
-      throw new TypeError(
-        `Questions must be an array. Received ${typeof questions}`
-      );
-    }
-    return prompt(questions).then(ans => {
-      return ans;
-    });
-  }
-
-  copyDirectory(destinationPath) {
-    this.logger.info({ info: `Creating ${destinationPath}.` });
-    shell.mkdir("-p", path.resolve(this.cwd, destinationPath));
-  }
-
-  generateFileData(filePath, fileData) {
-    fileData = Object.assign(
-      {},
-      this.globals,
-      {
-        __path: path.parse(filePath)
-      },
-      fileData
+    this.templatesDirectory = path.resolve(
+      this.localTemplatesPath,
+      this.args.name
     );
 
-    if (fileData._filename) {
-      fileData.__path.base = fileData._filename;
-      fileData.__path = path.parse(path.format(fileData.__path));
-      delete fileData._filename;
+    if (!shell.test("-e", this.templatesDirectory)) {
+      this.templatesDirectory = path.resolve(
+        this.globalTemplatesPath,
+        this.args.name
+      );
+      if (!shell.test("-e", this.templatesDirectory)) {
+        throw new Error(`Cannot find template ${this.args.name}`);
+      }
     }
 
     this.logger.debug({
-      debug: `File data for ${path.join(
-        fileData.__path.dir,
-        fileData.__path.name
+      debug: `Templates directory: ${this.templatesDirectory}`
+    });
+
+    this.globalPromptsFile = "globals.{yml,yaml,json}";
+
+    this.logger.debug({
+      debug: `Global prompts file: ${this.globalPromptsFile}`
+    });
+
+    this.filesToScaffold = this.filterFiles(
+      shell.ls("-RA", this.templatesDirectory)
+    );
+
+    this.logger.debug({
+      debug: `Files to scaffold ${JSON.stringify(
+        this.filesToScaffold,
+        undefined,
+        2
       )}`
     });
-    this.logger.debug(fileData);
-    return fileData;
   }
 
-  copyFile(fileData) {
-    let filePath = path.relative(
-      this.cwd,
-      path.resolve(fileData.__path.dir, fileData.__path.base)
+  filterFiles(paths) {
+    let filesToIgnore = ["globals.*", ".scfignore"];
+    let packageJsonPath = path.resolve(this.templatesDirectory, "package.json");
+    let scfIgnorePath = path.resolve(this.templatesDirectory, ".scfignore");
+    let ig = ignore().add(filesToIgnore);
+
+    if (scfIgnorePath && shell.test("-e", scfIgnorePath)) {
+      ig.add(this.readFile(scfIgnorePath));
+    }
+
+    if (packageJsonPath && shell.test("-e", packageJsonPath)) {
+      let contents = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
+      ig.add(contents.scfignore || []);
+    }
+
+    return ig.filter(paths);
+  }
+
+  async processGlobals() {
+    let globalFiles = shell.ls(
+      path.resolve(this.templatesDirectory, this.globalPromptsFile)
     );
-    if (fs.existsSync(filePath) && !this.options.force) {
-      this.logger.warn({
-        warn: `Skip creating ${filePath} as file already exists. Run with --force to overwrite existing files.`
+    for (const file of globalFiles) {
+      let fullTemplatesPath = path.resolve(this.templatesDirectory, file);
+      if (shell.test("-e", fullTemplatesPath)) {
+        this.logger.info({
+          info: `Loading global prompts from ${this.globalPromptsFile}.`
+        });
+
+        let contents = this.readFile(fullTemplatesPath);
+        if (!/^---\n/.test(contents)) {
+          contents = `---\n${contents.trim()}\n---`;
+        }
+        let fileMetaData = this.parseYamlFront(
+          this.globalPromptsFile,
+          contents
+        );
+
+        this.globals = await this.promptInput(fileMetaData.prompts);
+
+        this.logger.debug({
+          debug: `Answers for ${file}: ${JSON.stringify(
+            this.globals,
+            undefined,
+            2
+          )}`
+        });
+
+        return;
+      }
+    }
+    this.logger.info({
+      info: `No global prompts file exists.`
+    });
+  }
+
+  readFile(fullFilePath) {
+    this.logger.debug({ debug: `Reading ${fullFilePath}.` });
+    return fs.readFileSync(fullFilePath, "utf8");
+  }
+
+  buildPrompt(prompt) {
+    if (prompt.pattern) {
+      prompt.pattern =
+        typeof prompt.pattern == "string"
+          ? new RegExp(prompt.pattern)
+          : prompt.pattern;
+      if (!prompt.pattern instanceof RegExp) {
+        throw new TypeError(
+          `Pattern must be string|RegExp but recieved ${typeof prompt.pattern}.`
+        );
+      }
+      prompt.validate = function(input) {
+        return (
+          prompt.pattern.test(input) ||
+          `${input} does nto satisfy ${prompt.pattern}`
+        );
+      };
+    }
+    return prompt;
+  }
+
+  parseYamlFront(file, fileContents) {
+    fileContents =
+      fileContents ||
+      this.readFile(path.resolve(this.templatesDirectory, file));
+
+    this.logger.debug({
+      debug: `Parsing Yaml Front for ${file}`
+    });
+
+    let yaml = frontMatter.loadFront(fileContents);
+    yaml = Array.isArray(yaml) ? yaml : [];
+
+    let fileMetaData = {
+      src: file,
+      dest: "",
+      filename:
+        yaml.filter(p => p.filename !== undefined).map(f => f.filename)[0] ||
+        "",
+      prompts: yaml.filter(p => p.name !== undefined).map(this.buildPrompt),
+      skip: yaml.filter(p => p.skip !== undefined).map(f => f.skip)[0] || false,
+      conditions: yaml.filter(p => p.conditions !== undefined),
+      contents: yaml && yaml.__content ? yaml.__content : ""
+    };
+
+    fileMetaData.dest = path
+      .join(path.dirname(fileMetaData.src), fileMetaData.filename)
+      .replace(/\\/gi, "/");
+
+    this.logger.debug({
+      debug: `File meta data for ${file}: ${JSON.stringify(
+        fileMetaData,
+        undefined,
+        2
+      )}`
+    });
+
+    return fileMetaData;
+  }
+
+  shouldSkip(fileMetaData) {
+    return fileMetaData.skip || !this.meetsConditions(fileMetaData);
+  }
+
+  meetsConditions(fileMetaData) {
+    const { src, conditions } = fileMetaData;
+    if (!Array.isArray(conditions)) {
+      throw new TypeError(
+        `Expecting conditions to be an array but got ${typeof conditions}.`
+      );
+    }
+
+    let passes = !conditions.length
+      ? true
+      : conditions.reduce((accumulator, condition) => {
+          let andResult = condition.conditions.reduce((acc, con) => {
+            let results = acc;
+            if (!operators[con.operator](this.globals[con.name], con.value)) {
+              results = false;
+            }
+            this.logger.debug({
+              debug: `${con.name} with value of ${
+                con.value
+              } results in ${results} for ${con.operator}`
+            });
+            return results;
+          }, true);
+          return andResult || accumulator;
+        }, false);
+
+    this.logger.debug({
+      debug: `${src} ${passes} all conditions.`
+    });
+
+    return passes;
+  }
+
+  promptInput(prompts, showInfo = false) {
+    if (showInfo) {
+      this.logger.info(`Prompts for ${file}`);
+    }
+
+    if (!Array.isArray(prompts)) {
+      throw new TypeError(
+        `Prompts must be an array. Received ${typeof prompts}`
+      );
+    }
+
+    return prompt(prompts);
+  }
+
+  processDirectory(dir) {
+    let fullPath = path.resolve(this.cwd, dir);
+    if (!shell.test("-d", fullPath)) {
+      this.logger.info({ info: `Creating "${dir}/"` });
+      shell.mkdir("-p", fullPath);
+      this.logger.info({ info: `Done creating "${dir}/"` });
+    } else {
+      this.logger.info({
+        info: `Skip creating "${dir}/" Directory already exists.`
+      });
+    }
+  }
+
+  async processFile(file) {
+    let fullTemplatesPath = path.resolve(this.templatesDirectory, file);
+
+    let fileContents = this.readFile(fullTemplatesPath);
+    let fileMetaData = this.parseYamlFront(file, fileContents);
+
+    if (this.shouldSkip(fileMetaData)) {
+      this.logger.debug({
+        debug: `skipping ${file} as skip is set to true or conditions were not met`
       });
       return;
     }
-    this.logger.info({ info: `Creating ${filePath}` });
-    let content = template(fileData.__content || "", fileData);
-    // delete fileData.__content;
-    fs.writeFileSync(filePath, content.trim(), "utf8");
+
+    if (!shell.test("-e", fullTemplatesPath)) {
+      throw new Error(`Cannot locate ${fullTemplatesPath}`);
+    }
+
+    this.logger.info({
+      info: `Scaffolding "${file}".`
+    });
+
+    const { filename } = fileMetaData;
+    if (!filename || filename === "") {
+      let { filename: newName } = await this.promptInput([filenamePrompt]);
+      if (!newName || newName === "") {
+        this.logger.info({
+          info: `Skip scaffolding ${file} as a filename was not provided.`
+        });
+        return;
+      }
+      fileMetaData.filename = newName;
+      fileMetaData.dest = path
+        .join(path.dirname(fileMetaData.src), fileMetaData.filename)
+        .replace(/\\/gi, "/");
+    }
+
+    let fullDestinationPath = path.resolve(this.cwd, fileMetaData.dest);
+
+    if (shell.test("-e", fullDestinationPath) && !this.options.force) {
+      throw new Error(
+        `${file} already exists. Run with --force to overwrite existing files`
+      );
+    }
+
+    fileMetaData.promptAnswers = await this.promptInput(fileMetaData.prompts);
+
+    this.logger.debug({
+      debug: `Answers for ${file}: ${JSON.stringify(
+        fileMetaData.promptAnswers,
+        undefined,
+        2
+      )}`
+    });
+
+    this.generateTemplateData(fileMetaData);
+  }
+
+  generateTemplateData(fileMetaData) {
+    const { src, dest } = fileMetaData;
+
+    let templateData = {
+      ...this.globals,
+      ...{
+        src: src,
+        dest: dest
+      },
+      ...{
+        __path: path.parse(dest)
+      },
+      ...fileMetaData.promptAnswers
+    };
+
+    templateData.__path.dir = templateData.__path.dir.replace(/\\/gi, "/");
+
+    fileMetaData.templateData = templateData;
+
+    this.fileMappings[src] = {
+      src: src,
+      dest: dest,
+      __path: templateData.__path
+    };
+
+    this.filesMetaData.push(fileMetaData);
+
+    this.logger.debug({
+      debug: `Template data for ${src}: ${JSON.stringify(
+        templateData,
+        undefined,
+        2
+      )}`
+    });
+  }
+
+  createFiles() {
+    this.logger.debug({
+      debug: `Files metadata: ${JSON.stringify(
+        this.filesMetaData,
+        undefined,
+        2
+      )}`
+    });
+
+    this.logger.debug({
+      debug: `file mappings: ${JSON.stringify(this.fileMappings, undefined, 2)}`
+    });
+
+    let dirs = {};
+
+    for (const fileMetaData of this.filesMetaData) {
+      let {
+        templateData: {
+          __path: { dir }
+        }
+      } = fileMetaData;
+      if (dir !== "" && !dirs[dir]) {
+        this.processDirectory(dir);
+      }
+      fileMetaData.templateData = {
+        ...fileMetaData.templateData,
+        ...{ files: this.fileMappings }
+      };
+
+      this.logger.debug({
+        debug: `Updated file meta data: ${JSON.stringify(
+          fileMetaData,
+          undefined,
+          2
+        )}`
+      });
+
+      let content = template(
+        fileMetaData.contents || "",
+        fileMetaData.templateData
+      );
+
+      this.logger.debug({
+        debug: `file contents for ${fileMetaData.templateData.dest}: ${content}`
+      });
+
+      fs.writeFileSync(
+        path.resolve(this.cwd, fileMetaData.templateData.dest),
+        content.trim(),
+        "utf8"
+      );
+
+      this.logger.info({
+        info: `Done scaffolding ${fileMetaData.templateData.dest}`
+      });
+    }
   }
 
   async scaffold() {
-    const files = shell.ls("-R", this.template);
-    for (const file of files) {
-      if (/globals.(ya?ml|json)$/i.test(file)) continue;
-      const filePath = path.resolve(path.join(this.template, file));
-      const localPath = this.options.flatten
-        ? path.relative(this.cwd, path.basename(file, ".tmpl"))
-        : path.relative(
-            this.template,
-            path.resolve(
-              this.template,
-              path.dirname(file),
-              path.basename(file, ".tmpl")
-            )
-          );
-      if (shell.test("-d", filePath)) {
-        this.copyDirectory(localPath);
-      }
-
-      if (shell.test("-f", filePath)) {
-        const fileContents = this.readFile(filePath);
-        let questions = this.parseFile(filePath, fileContents);
-        let content = questions.__content;
-        delete questions.__content;
-        let fileData = await this.prompt(filePath, questions);
-        fileData.__content = content;
-        fileData = this.generateFileData(localPath, fileData);
-        this.copyFile(fileData);
+    for (const file of this.filesToScaffold) {
+      let fullTemplatesPath = path.resolve(this.templatesDirectory, file);
+      let fullDestinationPath = path.resolve(
+        this.cwd,
+        path.basename(file, ".tmpl")
+      );
+      if (shell.test("-f", fullTemplatesPath)) {
+        this.logger.debug({
+          debug: `scaffolding ${fullTemplatesPath} to ${fullDestinationPath}`
+        });
+        await this.processFile(file);
       }
     }
+    this.createFiles();
   }
 }

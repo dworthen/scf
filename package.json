@@ -31,6 +31,7 @@
     "es6-template-strings": "^2.0.1",
     "find-up": "^3.0.0",
     "home-or-tmp": "^3.0.0",
+    "ignore": "^5.1.2",
     "inquirer": "^6.0.0",
     "shelljs": "^0.8.2",
     "yaml-front-matter": "^4.0.0"
