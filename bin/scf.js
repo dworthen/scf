@@ -16,7 +16,7 @@ prog
     "-t, --templates-directory [templates-directory]",
     "Local directory where templates are stored.",
     undefined,
-    ".scf-templates"
+    ".scf"
   )
   .option("-f, --force", "overwrite existing files", prog.BOOLEAN, false)
   .action(scf);
@@ -27,7 +27,7 @@ prog
     "-t, --templates-directory [templates-directory]",
     "Local directory where templates are stored.",
     undefined,
-    ".scf-templates"
+    ".scf"
   )
   .action(init);
 
@@ -40,7 +40,7 @@ prog
     "-t, --templates-directory [templates-directory]",
     "Local directory where templates are stored.",
     undefined,
-    ".scf-templates"
+    ".scf"
   )
   .option(
     "-g, --global",
@@ -56,7 +56,7 @@ prog
     "-t, --templates-directory [templates-directory]",
     "Local directory where templates are stored.",
     undefined,
-    ".scf-templates"
+    ".scf"
   )
   .option(
     "-g, --global",
