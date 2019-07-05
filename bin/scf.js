@@ -12,6 +12,7 @@ prog
   .version(version)
   .command("create", "Scaffold out template")
   .argument("<name>", "Name of template to scaffold.")
+  .argument("[as]", "Name of project directory to create.", undefined, ".")
   .option(
     "-t, --templates-directory [templates-directory]",
     "Local directory where templates are stored.",

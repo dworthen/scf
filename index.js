@@ -35,7 +35,7 @@ class Scaffolder {
     this.args = args;
     this.options = options;
     this.logger = logger;
-    this.cwd = shell.pwd().toString();
+    this.cwd = path.join(shell.pwd().toString(), args.as);
     this.globals = {};
     this.filesMetaData = [];
     this.fileMappings = {};
