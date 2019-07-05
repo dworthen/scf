@@ -4,7 +4,7 @@ const findUp = require("find-up");
 const degit = require("degit");
 const globalTemplatesPath = require("./globalPath");
 
-module.exports = (args, options, logger) => {
+module.exports = async (args, options, logger) => {
   let install = new Install(options, logger);
   let as = args.as;
 
@@ -13,7 +13,7 @@ module.exports = (args, options, logger) => {
     as = template[template.length - 1];
   }
 
-  install.install(args.src, as);
+  await install.install(args.src, as);
 };
 
 class Install {
@@ -30,10 +30,11 @@ class Install {
     );
 
     if (shell.test("-e", dest) && !this.options.force) {
-      this.logger.info({
-        Error: `${dest} already exist. Run with --force to overwrite existing link.`
-      });
-      return;
+      return Promise.reject(
+        new Error(
+          `${dest} already exist. Run with --force to overwrite existing link.`
+        )
+      );
     }
 
     const emitter = degit(src, {
@@ -48,7 +49,7 @@ class Install {
       });
     });
 
-    emitter.clone(dest).then(() => {
+    return emitter.clone(dest).then(() => {
       this.logger.info({
         info: `Finished installing ${src} to ${dest}`
       });

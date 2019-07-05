@@ -8,6 +8,7 @@ const findUp = require("find-up");
 const globalTemplatesPath = require("./globalPath");
 const operators = require("./operators");
 const ignore = require("ignore");
+const install = require("./install");
 
 shell.config.silent = true;
 
@@ -24,6 +25,8 @@ module.exports = async (args, options, logger) => {
 
   const scaffolder = new Scaffolder(args, options, logger);
 
+  await scaffolder.setup();
+
   await scaffolder.processGlobals();
 
   await scaffolder.scaffold();
@@ -39,10 +42,13 @@ class Scaffolder {
     this.globals = {};
     this.filesMetaData = [];
     this.fileMappings = {};
+    this.templatesDirectory = "";
 
     this.localTemplatesPath = findUp.sync(this.options.templatesDirectory);
     this.globalTemplatesPath = globalTemplatesPath;
+  }
 
+  async setup() {
     this.templatesDirectory = path.resolve(
       this.localTemplatesPath,
       this.args.name
@@ -54,7 +60,27 @@ class Scaffolder {
         this.args.name
       );
       if (!shell.test("-e", this.templatesDirectory)) {
-        throw new Error(`Cannot find template ${this.args.name}`);
+        let templateName = this.args.name.split("/").reduce((acc, cur) => cur);
+        this.templatesDirectory = path.resolve(
+          this.globalTemplatesPath,
+          templateName
+        );
+
+        await install(
+          { src: this.args.name, as: null },
+          {
+            global: true,
+            force: true,
+            templatesDirectory: this.options.templatesDirectory
+          },
+          this.logger
+        ).catch(err => {
+          throw err;
+        });
+
+        if (!shell.test("-e", this.templatesDirectory)) {
+          throw new Error(`Cannot find template ${this.args.name}`);
+        }
       }
     }
 
@@ -256,12 +282,11 @@ class Scaffolder {
   processDirectory(dir) {
     let fullPath = path.resolve(this.cwd, dir);
     if (!shell.test("-d", fullPath)) {
-      this.logger.info({ info: `Creating "${dir}/"` });
       shell.mkdir("-p", fullPath);
-      this.logger.info({ info: `Done creating "${dir}/"` });
+      this.logger.info({ info: `Done scaffolding "${dir}/"` });
     } else {
       this.logger.info({
-        info: `Skip creating "${dir}/" Directory already exists.`
+        info: `Skip scaffolding "${dir}/". Directory already exists.`
       });
     }
   }
