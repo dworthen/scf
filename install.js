@@ -43,14 +43,14 @@ class Install {
     });
 
     emitter.on("info", info => {
-      this.logger.info({
-        info: info.message
+      this.logger.debug({
+        debug: info.message
       });
     });
 
     emitter.clone(dest).then(() => {
       this.logger.info({
-        info: "Done"
+        info: `Finished installing ${src} to ${dest}`
       });
     });
   }
