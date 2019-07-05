@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.1.0"></a>
+# [2.1.0](https://github.com/dworthen/scf/compare/v2.0.0...v2.1.0) (2019-07-05)
+
+
+### Bug Fixes
+
+* Change logging to show info when debugging ([4357517](https://github.com/dworthen/scf/commit/4357517))
+
+
+### Features
+
+* Add --skip-filenames flag to create command ([578c5d1](https://github.com/dworthen/scf/commit/578c5d1))
+* Add ability to create project folder ([4ae23ba](https://github.com/dworthen/scf/commit/4ae23ba))
+* Update create command to install if needed ([fcf9c1b](https://github.com/dworthen/scf/commit/fcf9c1b))
+
+
+
 <a name="2.0.0"></a>
 # [2.0.0](https://github.com/dworthen/scf/compare/v1.0.1...v2.0.0) (2019-07-03)
 
