@@ -314,7 +314,12 @@ class Scaffolder {
 
     const { filename } = fileMetaData;
     if (!filename || filename === "") {
-      let { filename: newName } = await this.promptInput([filenamePrompt]);
+      let newName = "";
+      if (!this.options.skipFilenames) {
+        newName = (await this.promptInput([filenamePrompt])).filename;
+      } else {
+        newName = path.basename(fileMetaData.src);
+      }
       if (!newName || newName === "") {
         this.logger.info({
           info: `Skip scaffolding ${file} as a filename was not provided.`

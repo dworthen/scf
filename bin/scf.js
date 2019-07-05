@@ -13,13 +13,19 @@ prog
   .command("create", "Scaffold out template")
   .argument("<name>", "Name of template to scaffold.")
   .argument("[as]", "Name of project directory to create.", undefined, ".")
+  .option("-f, --force", "overwrite existing files", prog.BOOLEAN, false)
+  .option(
+    "-s, --skip-filenames",
+    "scaffold out template directory as is without changing filenames.",
+    prog.BOOLEAN,
+    false
+  )
   .option(
     "-t, --templates-directory [templates-directory]",
     "Local directory where templates are stored.",
     undefined,
     ".scf"
   )
-  .option("-f, --force", "overwrite existing files", prog.BOOLEAN, false)
   .action(scf);
 
 prog
