@@ -118,8 +118,14 @@ class Scaffolder {
     }
 
     if (packageJsonPath && shell.test("-e", packageJsonPath)) {
-      let contents = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
-      ig.add(contents.scfignore || []);
+      try {
+        let contents = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
+        ig.add(contents.scfignore || []);
+      } catch (err) {
+        this.logger.debug({
+          debug: `Unable to read ${packageJsonPath}. ${err.message}`
+        });
+      }
     }
 
     return ig.filter(paths);
@@ -198,8 +204,9 @@ class Scaffolder {
       debug: `Parsing Yaml Front for ${file}`
     });
 
-    let yaml = frontMatter.loadFront(fileContents);
-    yaml = Array.isArray(yaml) ? yaml : [];
+    let fm = frontMatter.loadFront(fileContents);
+    let yaml = [].concat(fm);
+    yaml.__content = fm.__content;
 
     let fileMetaData = {
       src: file,
