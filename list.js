@@ -24,8 +24,8 @@ class List {
     this.logger.info();
     this.logger.info("Templates:");
     this.logger.info();
-    this.templates.forEach(template => {
+    for (const template of this.templates) {
       this.logger.info(`${template}`);
-    });
+    }
   }
 }
