@@ -417,7 +417,8 @@ class Scaffolder {
           __path: { dir }
         }
       } = fileMetaData;
-      if (dir !== "" && !dirs[dir]) {
+      let appPath = path.join(this.cwd, dir);
+      if (appPath !== "" && !dirs[appPath]) {
         this.processDirectory(dir);
       }
       fileMetaData.templateData = {
