@@ -7,6 +7,7 @@ const init = require("../init");
 const link = require("../link");
 const list = require("../list");
 const install = require("../install");
+const rm = require("../rm");
 
 prog
   .version(version)
@@ -43,33 +44,35 @@ prog
   .argument("<src>", "Template to install")
   .argument("[as]", "Template name", undefined, null)
   .option("-f, --force", "overwrite existing template", prog.BOOLEAN, false)
+  .option("-g, --global", "Install global templates", prog.BOOLEAN, false)
   .option(
     "-t, --templates-directory [templates-directory]",
     "Local directory where templates are stored.",
     undefined,
     ".scf"
-  )
-  .option(
-    "-g, --global",
-    "List globally installed templates",
-    prog.BOOLEAN,
-    false
   )
   .action(install);
 
 prog
-  .command("list", "List available templates")
+  .command("rm", "remove template")
+  .argument("<name>", "template to remove")
+  .option("-g, --global", "remove global template", prog.BOOLEAN, false)
   .option(
     "-t, --templates-directory [templates-directory]",
     "Local directory where templates are stored.",
     undefined,
     ".scf"
   )
+  .action(rm);
+
+prog
+  .command("list", "List available templates")
+  .option("-g, --global", "List global templates", prog.BOOLEAN, false)
   .option(
-    "-g, --global",
-    "List globally installed templates",
-    prog.BOOLEAN,
-    false
+    "-t, --templates-directory [templates-directory]",
+    "Local directory where templates are stored.",
+    undefined,
+    ".scf"
   )
   .action(list);
 
