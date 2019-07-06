@@ -20,7 +20,7 @@ class Install {
   constructor(options, logger) {
     this.logger = logger;
     this.options = options;
-    this.localTemplatesPath = findUp.sync(this.options.templatesDirectory);
+    this.localTemplatesPath = this.options.templatesDirectory;
   }
 
   install(src, as) {
