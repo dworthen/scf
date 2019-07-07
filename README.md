@@ -1,8 +1,10 @@
 # SCF
 
-A new way to scaffold code, SCF provides a declarative way to build project scaffolders that include cli prompts.
+A new way to scaffold code, SCF provides a declarative way to build project scaffolders. 
 
-At the most basic level, SCF will copy (scaffold) a directory from one location to another. As SCF copies files, it checks each file to see if it contains [YAML front matter](https://www.npmjs.com/package/yaml-front-matter)(YFM). SCF uses YFM to build cli prompts, asking users for input. SCF supports templating engines, [ES template strings](https://www.npmjs.com/package/es6-template-strings) by default. SCF uses YFM to gather data through cli prompts and template engine to consume said data within templated files. 
+At the most basic level, SCF copies (scaffolds) a directory from one location to another. As SCF copies files, it checks each file to see if it contains [YAML front matter](https://www.npmjs.com/package/yaml-front-matter) (YFM). YFM is not scaffolded out in the final file but is instead used to build CLI prompts. Responses are gathered and then interpolated in the remainging file contents as it is scaffolded out. SCF uses templating engines, [ES template strings](https://www.npmjs.com/package/es6-template-strings) by default, to interpolate prompt variables. Think static site generators, such as [Jekyll](https://jekyllrb.com/docs/front-matter/), that use YFM to scaffold out static websites, only SCF uses YFM to scaffold out command line interfaces and project templates instead.
+
+Any project or directory will work as a template for SCF to scaffold. To build out a custom CLI experience for your project scaffolder, add YFM and ES template strings to files. Doing so adds support for dynamic data and allows you to control the flow of the scaffolding process.
 
 # Usage
 
@@ -62,9 +64,9 @@ MyApp
 
 Which matches the contents of [dworthen/scf-static-site-template/tree/basic](https://github.com/dworthen/scf-static-site-template/tree/basic).
 
-This is a straight forward example. None of the template files contain any YFM so SCF only copies the project structure the desired location, _MyApp_, without prompting for any input.
+This is a straight forward example. None of the template files contain any YFM so SCF only copies the project structure to the desired location, _MyApp_, without prompting for any input.
 
-> The `create` command runs the `install` command internally if necessary. SCF uses degit to install templates from github, gitlab and butbucket. View [Rich-Harris/degit](https://github.com/Rich-Harris/degit) for more information.
+> The `create` command runs the `install` command internally, if necessary. SCF uses degit to install templates from github, gitlab and butbucket. View [Rich-Harris/degit](https://github.com/Rich-Harris/degit) for more information.
 
 # A more complete example
 
@@ -76,7 +78,7 @@ scf create dworthen/scf-static-site-template MyApp
 
 ![Example with prompts](docs/images/example6.png)
 
-No code was written to prompt for input. SCF builds cli prompts from the YFM present in template files. 
+No code was written to prompt for input. SCF builds CLI prompts from the YFM present in template files. 
 
 The above command and responses produces the following structure. 
 
@@ -155,9 +157,9 @@ Compare this to the template file, [dworthen/scf-static-site-template/blob/maste
 </html>
 ```
 
-The file starts with YFM (content between the opening and closing `---`). YFM will not be scaffolded out. Instead, SCF uses YFM to control the flow of the scaffolding process and to prompt for input.
+The file starts with YFM (content between the opening and closing `---`). YFM is not scaffolded out. Instead, SCF uses YFM to control the flow of the scaffolding process and to prompt for input.
 
-SCF scaffoldeds out the remaining contents after expanding variables using [ES template string](https://www.npmjs.com/package/es6-template-strings). `${title ? title : "Basic HTML Template"}` demonstrates using a ternary expression within an ES template.
+SCF scaffolds out the remaining contents after expanding variables using [ES template string](https://www.npmjs.com/package/es6-template-strings). `${title ? title : "Basic HTML Template"}` demonstrates using a ternary expression within an ES template.
 
 Both `link` and `script` elements reference a `file` object instead of a static path. The file object is a global object accessible to all template files and represents a mapping of original file locations to the scaffolded out location. The following is the `file` object for the current example.
 
@@ -220,13 +222,13 @@ Can use either `pattern` or `validate` to validate user input but not both at th
 
 ## Global prompts
 
-Prompts defined in _globals.yaml_ are prompted first and act as global variables and thus are accessible to all template files. Since _globals.yaml_ is YAML file it does not need opening and closing `---`.
+Prompts defined in _globals.yaml_ are prompted first and act as global variables and are accessible to all template files. Since _globals.yaml_ is a YAML file it does not need opening and closing `---`.
 
-## Reserved YAML keys
+# Reserved YAML keys
 
 - **filename\<string> (optional)**: Define the filename, skipping user input when scaffolding. Useful for files that have signicant meaning such as _package.json_ or _webpack.config.js_. _package.json_ and _index.html_ in [dworthen/scf-static-site-template](https://github.com/dworthen/scf-static-site-template) demonstrate using `filename`.
 - **templateEngine<es|ejs> (optional)**: set the template engine for rendering. Defaults to `es`.
-- **skip\<bool> (optional)**: if `true`, SCF will not scaffold out the file. 
+- **skip\<bool> (optional)**: if `true`, SCF skips scaffolding out the file. 
 - **conditions\<object[]> (optional)**: Defines a set of conditions for when the file should be scaffolded out. Conditions are checked against [global prompts](#global-prompts).
   - **conditions object**: 
     - **name\<string> (required)**: name of global prompt variable to check against.
@@ -235,7 +237,7 @@ Prompts defined in _globals.yaml_ are prompted first and act as global variables
 
 # Conditional scaffolding
 
-SCF supports conditional scaffolding. We can define conditions, declaratively, to dictate when a file will be scaffolded. For example, defining conditions for when a configuration file or build file will be scaffolded.
+SCF supports conditional scaffolding. Here is an example of using conditions to control when the build file, _webpack.config.js_ in this case, will be scaffolded.
 
 ```yaml
 ---
@@ -261,7 +263,7 @@ SCF supports conditional scaffolding. We can define conditions, declaratively, t
 
 SCF scaffolds out the above file if `(useBuildSystem === true && useWebpack === true) || simpeScaffold === true`. This is a contrived example but it demonstrates both ANDed and ORed conditionals. 
 
-Conditions work by checking values against [global prompt](#global-prompts) variables. The global prompts, defined in _globals.yaml_, for this example:
+Conditions work by checking values against [global prompt](#global-prompts) variables. Here is the _globals.yaml_ file for this example:
 
 ```yaml
 - name: useBuildSystem
@@ -275,7 +277,7 @@ Conditions work by checking values against [global prompt](#global-prompts) vari
   message: Do you not want to worry about configuration and just scaffold?
 ```
 
-> _globals.yaml_ is a YAML file and does not need to contain opening and closing `---` as with files containing YAML front matter.
+> _globals.yaml_ is a YAML file and does not need to contain the opening and closing `---` tags.
 
 The _package.json_ and _globals.yaml_ files of [dworthen/scf-static-site-template](https://github.com/dworthen/scf-static-site-template) demonstrates conditional scaffolding.
 
@@ -287,7 +289,7 @@ Here is what is available to templates.
 
 - **YFM prompts**: prompts defined within the YFM are available to the template content.
 
-  ```
+  ```html
   ---
   - name: person
   ---
@@ -319,7 +321,7 @@ Here is what is available to templates.
 
 [dworthen/scf-static-site-template/blob/master/index.html](https://github.com/dworthen/scf-static-site-template/blob/master/index.html) demonstrates using the `files` object to reference files in the `link` and `scripts` elements.
 
-> ES templates support expressions but not statements. This means that ternary expressions are supported but `if` statements or loops are not supported. EJS is a full templating 
+> ES templates support expressions but not statements. This means that ternary expressions are supported but `if` statements or loops are not supported. EJS is a full templating engine and does support conditionals and other control structures.
 
 
 # Special files
@@ -331,13 +333,13 @@ Here is what is available to templates.
 
 ## Branch based
 
-`scf create dworthen/scf-static-site-template#basic MyApp` and `scf create dworthen/scf-static-site-template MyApp` both scaffold both scaffold out [dworthen/scf-static-site-template](https://github.com/dworthen/scf-static-site-template) with one differnce. The former scaffolds out the `basic` branch while the latter scaffolds the `master` branch. 
+`scf create dworthen/scf-static-site-template#basic MyApp` and `scf create dworthen/scf-static-site-template MyApp` both scaffolded out [dworthen/scf-static-site-template](https://github.com/dworthen/scf-static-site-template) with one differnce. The former scaffolds out the `basic` branch while the latter scaffolds the `master` branch. 
 
-Template developers can thus create multiple branches to support a variety of scaffold templates. The downside to this approach is that consumers need to c  
+Template developers can then create multiple branches to support a variety of scaffold templates. The downside to this approach is that consumers need to which branch to target when scaffolding to get their desired project template.  
 
 SCF uses degit to install templates from github, gitlab and butbucket. View [Rich-Harris/degit](https://github.com/Rich-Harris/degit) for more information on targeting specific branches and tags.
 
-## Using YFM
+## File based using YFM
 
 One can use [global prompts](#global-prompts) and YFM to achieve file-based [conditional scaffolding](#conditional-scaffolding).
 
@@ -345,6 +347,7 @@ For example, the following [global prompts](#global-prompts) (_globals.yaml_) ca
 
 ```yaml
 - name: buildTool
+  message: Select your desired build tool.
   type: list
   choices:
     - webpack
@@ -383,15 +386,24 @@ SCF scaffolds out the correct config file based on which option the user selects
 
 1. Start with a project structure you want to scaffold. 
 2. Add [global prompts](#global-prompts) variables with _globals.yaml_.
-3. Declaratively define prompts for files using YAML front matter.
-4. Add [ES template strings](#es-template-strings), `${VARIABLE_NAME}`, to replace static content with variables. (Or use [ejs](https://www.npmjs.com/package/ejs))
-5. Add [_.scfignore_](#special-files) file to specify which files should be ignored by SCF. _readme_ files are good candidates for _.scfignore_.
-6. Use. Can either upload to github and use `scf create username/repo <ProjectName>` Or run `scf link . TEMPLATE_NAME` within the template project directory. Then run `scf create TEMPLATE_NAME <ProjectName>` anywhere. `scf link` works like `npm link`, allowing one to install local templates as global templates and then scaffold them from anywhere.
+3. Declaratively define prompts and SCF metadata using YAML front matter.
+4. Add [conditions](#conditional-scaffolding) for when a file should be scaffolded out using YAML front matter.
+5. Add [ES template strings](#es-template-strings), `${VARIABLE_NAME}`, to replace static content with variables. (Or use [ejs](https://www.npmjs.com/package/ejs))
+6. Add [_.scfignore_](#special-files) file to specify which files should be ignored by SCF. _readme_ files are good candidates for _.scfignore_.
+7. Use. Can either upload to github and use `scf create username/repo <ProjectName>` Or run `scf link . TEMPLATE_NAME` within the template project directory. Then run `scf create TEMPLATE_NAME <ProjectName>` anywhere. `scf link` works like `npm link`, allowing one to install local templates as global templates and then scaffold them from anywhere.
 
-# Example SCF project templates
+There is no need for template developers to write generators or code to specify what to prompt users, how to respond to prompts, and how to copy files from one place to another. Instead, template developers start with the directory structure they wish to scaffold and begin to add YFM to declaritively create prompts, ES template strings to support dynamic data, and conditions to determine what is copied and when.
+
+This is the approach taken with [dworthen/scf-static-site-template](https://github.com/dworthen/scf-static-site-template). The `basic` branch shows a simple project directory before adding any YFM or SCF specific content. The `master` branch shows what the project template looks like after adding SCF specific content and YFM. Scaffolding out the `master` branch allows the user to control what is scaffolded out. 
+
+## Sample SCF project templates
 
 - [dworthen/scf-static-site-template](https://github.com/dworthen/scf-static-site-template). A simple static website template for the purpose of demonstrating SCF features. 
 - [dworthen/scf-svelte-app](https://github.com/dworthen/scf-svelte-app-template). A template for [svelte](https://svelte.dev/) apps.
+
+# TODO
+
+A todo list is accumulating at [dworthen/scf/issues/1](https://github.com/dworthen/scf/issues/1).
 
 <!-- # Types of scaffolding
 
