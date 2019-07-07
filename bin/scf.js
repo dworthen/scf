@@ -21,6 +21,7 @@ prog
     prog.BOOLEAN,
     false
   )
+  .option("--ejs", "Use ejs template engine", prog.BOOLEAN, false)
   .option(
     "-t, --templates-directory [templates-directory]",
     "Local directory where templates are stored.",

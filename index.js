@@ -9,6 +9,7 @@ const globalTemplatesPath = require("./globalPath");
 const operators = require("./operators");
 const ignore = require("ignore");
 const install = require("./install");
+const ejs = require('ejs');
 
 shell.config.silent = true;
 
@@ -214,6 +215,7 @@ class Scaffolder {
       filename:
         yaml.filter(p => p.filename !== undefined).map(f => f.filename)[0] ||
         "",
+      templateEngine: yaml.filter(p => p.templateEngine !== undefined).map(p => p.templateEngine)[0] || "es",
       prompts: yaml.filter(p => p.name !== undefined).map(this.buildPrompt),
       skip: yaml.filter(p => p.skip !== undefined).map(f => f.skip)[0] || false,
       conditions: yaml.filter(p => p.conditions !== undefined),
@@ -434,10 +436,16 @@ class Scaffolder {
         )}`
       });
 
-      let content = template(
-        fileMetaData.contents || "",
-        fileMetaData.templateData
-      );
+      let content = "";
+      if(fileMetaData.templateEngine === "ejs" || this.options.ejs) {
+        content = ejs.render(fileMetaData.contents || "", fileMetaData.templateData);
+      } else {
+        content = template(
+          fileMetaData.contents || "",
+          fileMetaData.templateData
+        );
+      }
+      
 
       this.logger.debug({
         debug: `file contents for ${fileMetaData.templateData.dest}: ${content}`
