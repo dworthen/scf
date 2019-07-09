@@ -12,6 +12,7 @@ const rm = require("../rm");
 prog
   .version(version)
   .command("create", "Scaffold out template")
+  .default()
   .argument("<name>", "Name of template to scaffold.")
   .argument("[as]", "Name of project directory to create.", undefined, ".")
   .option("-f, --force", "overwrite existing files", prog.BOOLEAN, false)
