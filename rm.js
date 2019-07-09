@@ -1,7 +1,5 @@
 const path = require("path");
 const shell = require("shelljs");
-const findUp = require("find-up");
-const degit = require("degit");
 const globalTemplatesPath = require("./globalPath");
 
 module.exports = async (args, options, logger) => {

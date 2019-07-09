@@ -45,7 +45,7 @@ class Scaffolder {
     this.fileMappings = {};
     this.templatesDirectory = "";
 
-    this.localTemplatesPath = findUp.sync(this.options.templatesDirectory);
+    this.localTemplatesPath = findUp.sync(this.options.templatesDirectory, {type: "directory"});
     this.globalTemplatesPath = globalTemplatesPath;
   }
 
