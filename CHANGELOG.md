@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.4.1"></a>
+## [2.4.1](https://github.com/dworthen/scf/compare/v2.4.0...v2.4.1) (2019-07-09)
+
+
+### Bug Fixes
+
+* Update dependencies ([0e450f0](https://github.com/dworthen/scf/commit/0e450f0))
+
+
+
 <a name="2.4.0"></a>
 # [2.4.0](https://github.com/dworthen/scf/compare/v2.3.1...v2.4.0) (2019-07-09)
 
