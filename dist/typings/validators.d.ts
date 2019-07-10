@@ -1,0 +1,11 @@
+import { Parameter } from "./utils";
+export declare const notNull: (v1: Parameter) => string | true;
+export declare const instanceOf: (v1: Parameter, v2: Parameter) => string | true;
+export declare const typeOf: (v1: Parameter, v2: string) => string | true;
+export declare const eq: (v1: Parameter, v2: Parameter) => string | true;
+export declare const neq: (v1: Parameter, v2: Parameter) => string | true;
+export declare const gt: (v1: Parameter, v2: Parameter) => string | true;
+export declare const gte: (v1: Parameter, v2: Parameter) => string | true;
+export declare const lt: (v1: Parameter, v2: Parameter) => string | true;
+export declare const lte: (v1: Parameter, v2: Parameter) => string | true;
+export declare const isError: (input: string | boolean) => [boolean, (Error | undefined)?];
