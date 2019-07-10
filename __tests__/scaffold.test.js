@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-import { scaffold } from "../src/scaffold";
+import { scaffoldFile } from "../src/scaffold";
 import shell from "shelljs";
 import path from "path";
 
@@ -16,22 +16,22 @@ describe("Scaffold", () => {
   });
 
   test("Should throw when improperly called", async () => {
-    expect(scaffold()).rejects.toThrow();
-    expect(scaffold(5)).rejects.toThrow();
-    expect(scaffold("cool")).rejects.toThrow();
-    expect(scaffold("cool", 5)).rejects.toThrow();
+    expect(scaffoldFile()).rejects.toThrow();
+    expect(scaffoldFile(5)).rejects.toThrow();
+    expect(scaffoldFile("cool")).rejects.toThrow();
+    expect(scaffoldFile("cool", 5)).rejects.toThrow();
   });
 
   test("Should create file", async () => {
     // shell.mkdir("-p", path.dirname(scaffoldPath));
-    await scaffold(scaffoldPath, "Hello World!");
+    await scaffoldFile(scaffoldPath, "Hello World!");
     let contents = shell.cat(scaffoldPath).toString();
     expect(contents).toBe("Hello World!");
   });
 
   test("Should overwrite file", async () => {
     expect(shell.test("-e", scaffoldPath)).toBe(true);
-    await scaffold(scaffoldPath, "New Content");
+    await scaffoldFile(scaffoldPath, "New Content");
     let contents = shell.cat(scaffoldPath).toString();
     expect(contents).toBe("New Content");
   });
