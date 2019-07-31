@@ -232,7 +232,7 @@ Prompts defined in _globals.yaml_ are prompted first and act as global variables
 - **conditions\<object[]> (optional)**: Defines a set of conditions for when the file should be scaffolded out. Conditions are checked against [global prompts](#global-prompts).
   - **conditions object**: 
     - **name\<string> (required)**: name of global prompt variable to check against.
-    - **operator\<eq|neq|gt|gte|lt|lte> (required)**: defines how to check against global variable.
+    - **operator\<eq|neq|gt|gte|lt|lte|includes> (required)**: defines how to check against global variable.
     - **value\<any> (required)**: value used to check against global variable.
 
 # Conditional scaffolding

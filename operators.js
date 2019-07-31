@@ -16,5 +16,8 @@ module.exports = {
   },
   lte: function(val1, val2) {
     return val1 <= val2;
+  },
+  includes: function(val1, val2) {
+    return val1.includes(val2);
   }
 };
