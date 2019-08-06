@@ -39,7 +39,6 @@ class Scaffolder {
     this.args = args;
     this.options = options;
     this.logger = logger;
-    this.logger.debug("Start of constructor");
     this.cwd = path.join(shell.pwd().toString(), args.as);
     this.globals = {};
     this.filesMetaData = [];
@@ -51,7 +50,6 @@ class Scaffolder {
         type: "directory"
       }) || ".scf";
     this.globalTemplatesPath = globalTemplatesPath;
-    this.logger.debug("End of constructor");
   }
 
   async setup() {
