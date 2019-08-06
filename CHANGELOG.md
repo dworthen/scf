@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.5.1"></a>
+## [2.5.1](https://github.com/dworthen/scf/compare/v2.5.0...v2.5.1) (2019-08-06)
+
+
+### Bug Fixes
+
+* path is undefined but should be string ([1dfd8b9](https://github.com/dworthen/scf/commit/1dfd8b9)), closes [#2](https://github.com/dworthen/scf/issues/2)
+
+
+
 <a name="2.5.0"></a>
 # [2.5.0](https://github.com/dworthen/scf/compare/v2.4.1...v2.5.0) (2019-07-31)
 
