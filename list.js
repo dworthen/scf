@@ -11,7 +11,9 @@ class List {
   constructor(options, logger) {
     this.logger = logger;
     this.options = options;
-    this.localTemplatesPath = findUp.sync(this.options.templatesDirectory, {type: "directory"});
+    this.localTemplatesPath =
+      findUp.sync(this.options.templatesDirectory, { type: "directory" }) ||
+      ".scf";
 
     this.templates = fs.readdirSync(
       this.options.global ? globalTemplatesPath : this.localTemplatesPath

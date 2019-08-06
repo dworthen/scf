@@ -9,7 +9,7 @@ const globalTemplatesPath = require("./globalPath");
 const operators = require("./operators");
 const ignore = require("ignore");
 const install = require("./install");
-const ejs = require('ejs');
+const ejs = require("ejs");
 
 shell.config.silent = true;
 
@@ -39,14 +39,19 @@ class Scaffolder {
     this.args = args;
     this.options = options;
     this.logger = logger;
+    this.logger.debug("Start of constructor");
     this.cwd = path.join(shell.pwd().toString(), args.as);
     this.globals = {};
     this.filesMetaData = [];
     this.fileMappings = {};
     this.templatesDirectory = "";
 
-    this.localTemplatesPath = findUp.sync(this.options.templatesDirectory, {type: "directory"});
+    this.localTemplatesPath =
+      findUp.sync(this.options.templatesDirectory, {
+        type: "directory"
+      }) || ".scf";
     this.globalTemplatesPath = globalTemplatesPath;
+    this.logger.debug("End of constructor");
   }
 
   async setup() {
@@ -215,7 +220,10 @@ class Scaffolder {
       filename:
         yaml.filter(p => p.filename !== undefined).map(f => f.filename)[0] ||
         "",
-      templateEngine: yaml.filter(p => p.templateEngine !== undefined).map(p => p.templateEngine)[0] || "es",
+      templateEngine:
+        yaml
+          .filter(p => p.templateEngine !== undefined)
+          .map(p => p.templateEngine)[0] || "es",
       prompts: yaml.filter(p => p.name !== undefined).map(this.buildPrompt),
       skip: yaml.filter(p => p.skip !== undefined).map(f => f.skip)[0] || false,
       conditions: yaml.filter(p => p.conditions !== undefined),
@@ -437,15 +445,17 @@ class Scaffolder {
       });
 
       let content = "";
-      if(fileMetaData.templateEngine === "ejs" || this.options.ejs) {
-        content = ejs.render(fileMetaData.contents || "", fileMetaData.templateData);
+      if (fileMetaData.templateEngine === "ejs" || this.options.ejs) {
+        content = ejs.render(
+          fileMetaData.contents || "",
+          fileMetaData.templateData
+        );
       } else {
         content = template(
           fileMetaData.contents || "",
           fileMetaData.templateData
         );
       }
-      
 
       this.logger.debug({
         debug: `file contents for ${fileMetaData.templateData.dest}: ${content}`
