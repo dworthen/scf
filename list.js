@@ -11,19 +11,27 @@ class List {
   constructor(options, logger) {
     this.logger = logger;
     this.options = options;
+    this.templates = [];
     this.localTemplatesPath =
       findUp.sync(this.options.templatesDirectory, { type: "directory" }) ||
       ".scf";
 
-    this.templates = fs.readdirSync(
-      this.options.global ? globalTemplatesPath : this.localTemplatesPath
-    );
+    try {
+      this.templates = fs.readdirSync(
+        this.options.global ? globalTemplatesPath : this.localTemplatesPath
+      );
+    } catch {}
   }
 
   list() {
     this.logger.info();
     this.logger.info("Templates:");
     this.logger.info();
+    if (!this.templates.length) {
+      this.logger.info(
+        `No ${this.options.global ? "global" : "local"} templates found`
+      );
+    }
     for (const template of this.templates) {
       this.logger.info(`${template}`);
     }
