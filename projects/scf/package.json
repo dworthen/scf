@@ -5,7 +5,7 @@
   "main": "dist/cjs/index.js",
   "typings": "dist/typings",
   "scripts": {
-    "test": "jest __tests__",
+    "test": "jest",
     "clean": "shx rm -rf dist",
     "build": "tsc",
     "watch": "tsc --watch"
@@ -16,9 +16,9 @@
   "author": "Derek Worthen",
   "license": "MIT",
   "dependencies": {
-    "bycontract": "^2.0.7",
     "ignore": "^5.1.4",
-    "shelljs": "^0.8.3"
+    "shelljs": "^0.8.3",
+    "@dworthen/bycontract": "^2.0.8"
   },
   "devDependencies": {
     "@babel/core": "^7.6.4",

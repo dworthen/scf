@@ -1,4 +1,4 @@
-import { validate, typedef } from "bycontract";
+import { validate, typedef } from "@dworthen/bycontract";
 import shell from "shelljs";
 import path from "path";
 

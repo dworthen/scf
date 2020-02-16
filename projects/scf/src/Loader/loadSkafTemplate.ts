@@ -1,11 +1,11 @@
-import { validate } from "bycontract";
+import { validate } from "@dworthen/bycontract";
 // import fs from 'fs';
 // import util from 'util';
 import path from "path";
 import shell from "shelljs";
 import gitIgnore from "ignore";
 
-export function load(
+export function loadSkafTemplate(
   from: string,
   to: string,
   ignore: string[] = []

@@ -9,4 +9,7 @@ type FileObj = {
   [key: string]: any;
 };
 
-type plugin = (next: plugin, file: FileObj) => {};
+// type plugin = (next: plugin, file: FileObj): FileObj;
+type Plugin = (next: PluginPipeline, file: FileObj) => Promise<FileObj>;
+
+type PluginPipeline = (file: FileObj) => Promise<FileObj>;

@@ -1,38 +1,56 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const bycontract_1 = require("bycontract");
+var bycontract_1 = require("@dworthen/bycontract");
 // import fs from 'fs';
 // import util from 'util';
-const path_1 = __importDefault(require("path"));
-const shelljs_1 = __importDefault(require("shelljs"));
-const ignore_1 = __importDefault(require("ignore"));
-function load(from, to, ignore = []) {
+var path_1 = __importDefault(require("path"));
+var shelljs_1 = __importDefault(require("shelljs"));
+var ignore_1 = __importDefault(require("ignore"));
+function load(from, to, ignore) {
+    if (ignore === void 0) { ignore = []; }
     bycontract_1.validate([from, to, ignore], ["string", "string", "Array.<string>"]);
     from = path_1.default.normalize(from).replace(/(?:\\|\/)$/, "");
     to = path_1.default.normalize(to).replace(/(?:\\|\/)$/, "");
-    const ig = ignore_1.default().add(ignore);
-    return shelljs_1.default.ls("-R", from).reduce((acc, cur) => {
-        const file = path_1.default
+    var ig = ignore_1.default().add(ignore);
+    return shelljs_1.default.ls("-R", from).reduce(function (acc, cur) {
+        var file = path_1.default
             .normalize(cur)
             .replace(/^(?:\.*\\|\/)/, "")
             .replace(/(?:\\|\/)$/, "");
         if (ig.ignores(file))
             return acc;
-        const fullPath = path_1.default.join(from, cur);
-        const isFile = shelljs_1.default.test("-f", fullPath);
-        const contents = isFile && shelljs_1.default.cat(fullPath).toString();
-        return [
-            ...acc,
-            Object.assign({ from,
-                to, name: file, type: isFile
+        var fullPath = path_1.default.join(from, cur);
+        var isFile = shelljs_1.default.test("-f", fullPath);
+        var contents = isFile && shelljs_1.default.cat(fullPath).toString();
+        return __spreadArrays(acc, [
+            __assign({ from: from,
+                to: to, name: file, type: isFile
                     ? "file"
                     : shelljs_1.default.test("-d", fullPath)
                         ? "directory"
-                        : "unknown" }, (isFile && { contents }))
-        ];
+                        : "unknown" }, (isFile && { contents: contents }))
+        ]);
     }, []);
 }
 exports.load = load;
