@@ -2,6 +2,7 @@ dependencies:
   '@babel/core': 7.7.2
   '@babel/preset-env': 7.7.1
   '@babel/preset-typescript': 7.7.2
+  '@dworthen/bycontract': 2.0.8
   '@rush-temp/cli': 'file:projects/cli.tgz'
   '@rush-temp/scf': 'file:projects/scf.tgz'
   '@types/command-line-usage': 5.0.1
@@ -1327,6 +1328,10 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-r5160ogAvGyHsal38Kux7YYtodEKOj89RGb28ht1jh3SJb08VwRwAKKJL0bGb04Zd/3r9FL3BFIc3bBidYffCA==
+  /@dworthen/bycontract/2.0.8:
+    dev: false
+    resolution:
+      integrity: sha512-OVx4s0/RMdAVRSEjnqHvCbzzgxOYREiOlvLr6ftBA3P5AkKdDwOthfC2l28Nvm0QiGlMgMvPfDl5Kd/ZmqpbWQ==
   /@jest/console/24.9.0:
     dependencies:
       '@jest/source-map': 24.9.0
@@ -4985,6 +4990,7 @@ packages:
       '@babel/core': 7.7.2
       '@babel/preset-env': /@babel/preset-env/7.7.1/@babel!core@7.7.2
       '@babel/preset-typescript': /@babel/preset-typescript/7.7.2/@babel!core@7.7.2
+      '@dworthen/bycontract': 2.0.8
       '@types/jest': 24.0.23
       '@types/node': 12.12.8
       '@types/shelljs': 0.8.6
@@ -4999,7 +5005,7 @@ packages:
     dev: false
     name: '@rush-temp/scf'
     resolution:
-      integrity: sha512-ATcYNEInYnNyxuIoNrjm+8g55LIjf0SBewTabtrSPeXO2Ms2vDkWZ99b+/YrPRy4u4baOQORoWVEzoPSUYNCsw==
+      integrity: sha512-/lS4UFeCl0C/CjsFIizZbOT81W2R1f8ThoHW/IrfadZaD+b6p3ylkjyNDcsxONHST/XxBbwiwdPZmksjsqpd1w==
       tarball: 'file:projects/scf.tgz'
     version: 0.0.0
 registry: 'https://registry.npmjs.org/'
@@ -5009,6 +5015,7 @@ specifiers:
   '@babel/core': ^7.6.4
   '@babel/preset-env': ^7.6.3
   '@babel/preset-typescript': ^7.6.0
+  '@dworthen/bycontract': ^2.0.8
   '@rush-temp/cli': 'file:./projects/cli.tgz'
   '@rush-temp/scf': 'file:./projects/scf.tgz'
   '@types/command-line-usage': ^5.0.1

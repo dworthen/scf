@@ -3,8 +3,5 @@ function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
 Object.defineProperty(exports, "__esModule", { value: true });
-__export(require("./Utils"));
-__export(require("./Loader"));
-__export(require("./Scaffolder"));
-__export(require("./PluginPipeline"));
+__export(require("./buildPlugnPipeline"));
 //# sourceMappingURL=index.js.map
