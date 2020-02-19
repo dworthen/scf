@@ -13,29 +13,14 @@ describe("loadSkafTemplate", () => {
     expect(() => {
       loadSkafTemplate("", 5);
     }).toThrow();
-    expect(() => {
-      loadSkafTemplate("", "", 5);
-    }).toThrow();
-    expect(() => {
-      loadSkafTemplate("", "", [5]);
-    }).toThrow();
   });
 
   test("should return list of files and directory items.", async () => {
     // Arrange
     let from = "./currentDirectory";
     let to = "../../newDirectory";
-    let ignore = [".ignore", ".git"];
     let lsStub = jest.fn();
-    lsStub.mockReturnValue([
-      "dir1/",
-      "dir1/file1",
-      "file2",
-      ".hidden",
-      ".ignore",
-      ".ignore/file1",
-      ".git"
-    ]);
+    lsStub.mockReturnValue(["dir1/", "dir1/file1", "file2", ".hidden"]);
 
     let testStub = jest.fn();
     testStub.mockImplementation((type, path) => {
@@ -52,7 +37,7 @@ describe("loadSkafTemplate", () => {
     shell.cat = cat;
 
     // Act
-    let files = loadSkafTemplate(from, to, ignore);
+    let files = loadSkafTemplate(from, to);
 
     // Assert
     let expectedPaths = {
