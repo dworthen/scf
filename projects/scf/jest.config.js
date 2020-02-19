@@ -3,5 +3,10 @@
 
 module.exports = {
   testEnvironment: "node",
-  preset: "ts-jest/presets/js-with-babel"
+  preset: "ts-jest/presets/js-with-babel",
+  globals: {
+    "ts-jest": {
+      packageJson: "package.json"
+    }
+  }
 };
