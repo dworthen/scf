@@ -26,20 +26,18 @@ var bycontract_1 = require("@dworthen/bycontract");
 // import util from 'util';
 var path_1 = __importDefault(require("path"));
 var shelljs_1 = __importDefault(require("shelljs"));
-var ignore_1 = __importDefault(require("ignore"));
-function loadSkafTemplate(from, to, ignore) {
-    if (ignore === void 0) { ignore = []; }
-    bycontract_1.validate([from, to, ignore], ["string", "string", "Array.<string>"]);
+// import gitIgnore from "ignore";
+function loadSkafTemplate(from, to) {
+    bycontract_1.validate([from, to], ["string", "string"]);
     from = path_1.default.normalize(from).replace(/(?:\\|\/)$/, "");
     to = path_1.default.normalize(to).replace(/(?:\\|\/)$/, "");
-    var ig = ignore_1.default().add(ignore);
+    // const ig = gitIgnore().add(ignore);
     return shelljs_1.default.ls("-R", from).reduce(function (acc, cur) {
         var file = path_1.default
             .normalize(cur)
             .replace(/^(?:\.*\\|\/)/, "")
             .replace(/(?:\\|\/)$/, "");
-        if (ig.ignores(file))
-            return acc;
+        // if (ig.ignores(file)) return acc;
         var fullPath = path_1.default.join(from, cur);
         var isFile = shelljs_1.default.test("-f", fullPath);
         var contents = isFile && shelljs_1.default.cat(fullPath).toString();

@@ -358,14 +358,14 @@
     //   "reviewCategory": "tools"
     // }
     {
-      "packageName": "scf",
+      "packageName": "@skaf/skaf",
       "projectFolder": "projects/scf",
-      "versionPolicyName": "scf"
+      "versionPolicyName": "skaf"
     },
     {
-      "packageName": "@scf/cli",
+      "packageName": "@skaf/cli",
       "projectFolder": "projects/cli",
-      "versionPolicyName": "scf"
+      "versionPolicyName": "skaf"
     }
   ]
 }

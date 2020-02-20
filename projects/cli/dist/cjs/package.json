@@ -1,5 +1,5 @@
 {
-    "name": "@scf/cli",
+    "name": "@skaf/cli",
     "version": "3.0.0-alpha.0",
     "description": "Easy project and template scaffolding.",
     "main": "dist/cjs/index.js",
