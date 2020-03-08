@@ -1,42 +1,34 @@
+import * as path from "path";
 import { validate } from "@dworthen/bycontract";
-// import fs from 'fs';
-// import util from 'util';
-import path from "path";
-import shell from "shelljs";
-// import gitIgnore from "ignore";
+import { readDir, FileListing } from "../Utils";
 
-export function loadSkafTemplate(from: string, to: string): Array<FileObj> {
-  validate([from, to], ["string", "string"]);
+export function loadSkafTemplate(
+  from: string,
+  to: string,
+  ignore: string[] = []
+): FileObj[] {
+  validate([from, to, ignore], ["string", "string", "Array.<string>"]);
 
   from = path.normalize(from).replace(/(?:\\|\/)$/, "");
   to = path.normalize(to).replace(/(?:\\|\/)$/, "");
 
-  // const ig = gitIgnore().add(ignore);
+  let files: FileListing[] = readDir(from, ignore, {
+    stats: true
+  }) as FileListing[];
 
-  return shell.ls("-R", from).reduce<Array<FileObj>>((acc, cur) => {
-    const file = path
-      .normalize(cur)
-      .replace(/^(?:\.*\\|\/)/, "")
-      .replace(/(?:\\|\/)$/, "");
-    // if (ig.ignores(file)) return acc;
-    const fullPath = path.join(from, cur);
-    const isFile = shell.test("-f", fullPath);
-    const contents = isFile && shell.cat(fullPath).toString();
-    return [
-      ...acc,
-      {
-        from,
-        to,
-        name: file,
-        type: isFile
-          ? "file"
-          : shell.test("-d", fullPath)
-          ? "directory"
-          : "unknown",
-        ...(isFile && { contents })
-      } as FileObj
-    ];
-  }, []);
+  return files.map(fileListing => {
+    return {
+      ...fileListing,
+      from,
+      to
+    };
+  });
 }
 
-// console.log(load(path.resolve(__dirname, ".."), __dirname));
+console.log(
+  JSON.stringify(
+    loadSkafTemplate("projects", "app", ["node_modules", ".git"]),
+    undefined,
+    2
+  )
+);
