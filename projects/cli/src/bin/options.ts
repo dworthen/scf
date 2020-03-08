@@ -1,22 +1,21 @@
-export const commands = ["create"];
+export const commands = new Set(["create"]);
 
 export const minimistOptions = {
-  string: ["configFile"],
+  string: ["config"],
   boolean: ["help", "version"],
   alias: {
     h: "help",
-    c: "configFile",
     v: "version"
   },
   default: {
-    configFile: "scf.config.js"
+    config: "skaf.config.js"
   }
 };
 
 export const scfOptions = [
   {
     header: "Usage",
-    content: "$ scf <command> [options]"
+    content: "$ skaf <command> [options]"
   },
   {
     header: "Commands",
@@ -34,26 +33,26 @@ export const scfOptions = [
         name: "help",
         description: "Print this usage guide.",
         alias: "h",
-        type: Boolean
+        type: Boolean,
+        defaultValue: false
       },
       {
-        name: "config-file",
-        description: "specify config file.",
-        alias: "c",
+        name: "config",
+        description: "specify config file. [skaf.config.js]",
         type: String,
-        defaultValue: "scf.config.js",
+        defaultValue: "skaf.config.js",
         typeLabel: "<file>"
       },
       {
         name: "version",
-        description: "prints scf version.",
+        description: "prints Skaf version.",
         alias: "v",
         type: Boolean
       }
     ]
   },
   {
-    content: "$ scf <command> --help"
+    content: "$ skaf <command> --help"
   }
 ];
 
@@ -61,13 +60,13 @@ export const createOptions = [
   {
     header: "Usage",
     content: [
-      "$ scf create <template> [path]",
+      "$ skaf create <template> [path]",
       "",
       "Scaffold <template> to [path|.]. Template may be a git repo following user/repo format."
     ]
   },
   {
     header: "Example",
-    content: "scf create dworthen/scf-static-site-template MyApp"
+    content: "skaf create dworthen/scf-static-site-template MyApp"
   }
 ];
