@@ -16,6 +16,13 @@ export const scfOptions = [
     header: "Global Options",
     optionList: [
       {
+        name: "version",
+        description: "prints Skaf version.",
+        alias: "v",
+        type: Boolean,
+        defaultValue: false
+      },
+      {
         name: "help",
         description: "Print this usage guide.",
         alias: "h",
@@ -28,12 +35,6 @@ export const scfOptions = [
         type: String,
         defaultValue: "skaf.config.js",
         typeLabel: "<file>"
-      },
-      {
-        name: "version",
-        description: "prints Skaf version.",
-        alias: "v",
-        type: Boolean
       }
     ]
   },
@@ -51,7 +52,19 @@ export const createOptions = [
     ]
   },
   {
+    header: "Options",
+    optionList: [
+      {
+        name: "force",
+        alias: "f",
+        description: "overwrite existing files",
+        type: Boolean,
+        defaultValue: false
+      }
+    ]
+  },
+  {
     header: "Example",
-    content: "skaf create dworthen/scf-static-site-template MyApp"
+    content: "skaf create dworthen/scf-static-site-template MyApp -f"
   }
 ];
