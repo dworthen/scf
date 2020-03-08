@@ -1,21 +1,11 @@
-import commandLineUsage from "command-line-usage";
-import { scfOptions, createOptions, commands } from "./options";
 import type {ParsedArgs} from "minimist";
+import { getCommandUsage } from '../Commands';
 
-const defaultUsage = commandLineUsage(scfOptions);
-const createUsage = commandLineUsage(createOptions);
 
 export function displayUsageInfo(args: ParsedArgs) {
 
-  let command = args._[0] || "default";
+  let command = (args._[0] || "default").toLowerCase();
 
-  switch (command) {
-    case "create":
-      console.log(createUsage);
-      break;
-    default:
-      console.log(defaultUsage);
-      break;
-  }
+  console.log(getCommandUsage(command));
 
 }

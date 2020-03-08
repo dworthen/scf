@@ -1,5 +1,6 @@
 import minimist from "minimist";
-import { minimistOptions, displayUsageInfo, printVersion } from "./bin";
+import { minimistOptions } from "./Config";
+import { displayUsageInfo, printVersion } from "./bin";
 import { exists } from "fs";
 
 let argv = minimist(process.argv.slice(2), minimistOptions);

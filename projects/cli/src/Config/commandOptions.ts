@@ -1,17 +1,3 @@
-export const commands = new Set(["create"]);
-
-export const minimistOptions = {
-  string: ["config"],
-  boolean: ["help", "version"],
-  alias: {
-    h: "help",
-    v: "version"
-  },
-  default: {
-    config: "skaf.config.js"
-  }
-};
-
 export const scfOptions = [
   {
     header: "Usage",
@@ -61,7 +47,6 @@ export const createOptions = [
     header: "Usage",
     content: [
       "$ skaf create <template> [path]",
-      "",
       "Scaffold <template> to [path|.]. Template may be a git repo following user/repo format."
     ]
   },
