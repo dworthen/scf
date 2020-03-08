@@ -11,7 +11,10 @@
       "runtimeArgs": ["--no-lazy", "-r", "ts-node/register"],
       "args": ["${relativeFile}"],
       "cwd": "${workspaceFolder}",
-      "sourceMaps": true
+      "sourceMaps": true,
+      "env": {
+        "TS_NODE_FILES": "true"
+      }
     }
   ]
 }
