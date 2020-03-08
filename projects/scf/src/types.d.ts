@@ -1,15 +1,17 @@
-type FileType = "file" | "directory" | "unknown";
+import type { Stats } from "fs";
 
-type FileObj = {
-  from: string;
-  to: string;
-  name: string;
-  type: FileType;
-  contents?: string;
-  [key: string]: any;
-};
-
-// type plugin = (next: plugin, file: FileObj): FileObj;
-type Plugin = (next: PluginPipeline, file: FileObj) => Promise<FileObj>;
-
-type PluginPipeline = (file: FileObj) => Promise<FileObj>;
+declare global {  
+  type FileObj = {
+    from: string;
+    to: string;
+    relativePath: string;
+    stats: Stats;
+    contents?: string;
+    [key: string]: any;
+  };
+  
+  // type plugin = (next: plugin, file: FileObj): FileObj;
+  type Plugin = (next: PluginPipeline, file: FileObj) => Promise<FileObj>;
+  
+  type PluginPipeline = (file: FileObj) => Promise<FileObj>;
+}
