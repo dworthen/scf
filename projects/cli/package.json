@@ -13,10 +13,11 @@
   "author": "Derek Worthen",
   "license": "MIT",
   "dependencies": {
-    "bycontract": "^2.0.7",
+    "@dworthen/bycontract": "^2.0.8",
     "command-line-usage": "^6.1.0",
     "minimist": "^1.2.0",
-    "shelljs": "^0.8.3"
+    "shelljs": "^0.8.3",
+    "@microsoft/node-core-library": "^3.19.3"
   },
   "devDependencies": {
     "@babel/core": "^7.6.4",

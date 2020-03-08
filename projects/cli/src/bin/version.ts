@@ -1,5 +1,6 @@
-import { version } from "../../package.json";
+import { PackageJsonLookup } from "@microsoft/node-core-library";
 
 export function printVersion() {
-  console.log(`Skaf Version ${version}`);
+  let packageJson = PackageJsonLookup.loadOwnPackageJson(__dirname);
+  console.log(`Skaf Version ${packageJson.version}`);
 }
