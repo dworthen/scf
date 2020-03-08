@@ -5,7 +5,7 @@
   "main": "dist/cjs/index.js",
   "typings": "dist/typings",
   "scripts": {
-    "test": "jest __tests__",
+    "test": "jest",
     "clean": "shx rm -rf dist",
     "build": "tsc",
     "watch": "tsc --watch"
