@@ -1,6 +1,7 @@
-import { validate, typedef } from "@dworthen/bycontract";
-import shell from "shelljs";
-import path from "path";
+import { typedef, validate } from "@dworthen/bycontract";
+
+import * as path from "path";
+import * as shell from "shelljs";
 
 typedef("FileObj", {
   from: "string",

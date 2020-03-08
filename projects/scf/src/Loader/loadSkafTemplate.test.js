@@ -1,6 +1,6 @@
 import shell from "shelljs";
 import { loadSkafTemplate } from "./loadSkafTemplate";
-import path from "path";
+import * as path from "path";
 
 jest.mock("shelljs");
 

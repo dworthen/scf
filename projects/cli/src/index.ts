@@ -1,3 +1,1 @@
-import * as Bin from "./bin";
-
-export { Bin };
+export * as Bin from "./bin";
