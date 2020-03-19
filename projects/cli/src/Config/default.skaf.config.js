@@ -1,5 +1,6 @@
 module.exports = argv => {
   return {
-    ignore: ["node_modules", ".git"]
+    localTemplateDirectory: ".skaf",
+    ignore: ["node_modules", ".git", "nua.config.js"]
   };
 };
