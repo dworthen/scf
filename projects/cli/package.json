@@ -2,8 +2,11 @@
   "name": "@skaf/cli",
   "version": "3.0.0-alpha.0",
   "description": "Easy project and template scaffolding.",
-  "main": "dist/cjs/index.js",
-  "typings": "dist/typings",
+  "main": "./dist/cjs/index.js",
+  "bin": {
+    "nua": "./dist/cj/index.js"
+  },
+  "typings": "./dist/typings",
   "scripts": {
     "test": "jest",
     "clean": "shx rm -rf dist",
@@ -16,9 +19,10 @@
     "@dworthen/bycontract": "^2.0.8",
     "@skaf/skaf": "3.0.0-alpha.0",
     "command-line-usage": "^6.1.0",
+    "find-up": "^4.1.0",
     "minimist": "^1.2.0",
-    "shelljs": "^0.8.3",
-    "@microsoft/node-core-library": "^3.19.3"
+    "@microsoft/node-core-library": "^3.19.3",
+    "inquirer": "^7.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.6.4",
@@ -29,6 +33,7 @@
     "@types/minimist": "^1.2.0",
     "@types/node": "^12.11.1",
     "@types/shelljs": "^0.8.5",
+    "@types/inquirer": "^6.5.0",
     "babel-jest": "^24.9.0",
     "jest": "^24.9.0",
     "shx": "^0.3.2",
