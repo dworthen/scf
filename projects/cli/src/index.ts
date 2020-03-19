@@ -1,5 +1,7 @@
+#!/usr/bin/env node
+
 import minimist from "minimist";
-import { minimistOptions, loadSkafConfig } from "./Config";
+import { minimistOptions } from "./Config";
 import { displayUsageInfo, printVersion } from "./bin";
 import { getCommand } from "./Commands";
 
