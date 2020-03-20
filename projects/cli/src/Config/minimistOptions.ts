@@ -1,10 +1,12 @@
 export const minimistOptions = {
   string: ["config"],
-  boolean: ["help", "version", "force"],
+  boolean: ["version", "help", "force", "global", "install"],
   alias: {
-    h: "help",
     v: "version",
-    f: "force"
+    h: "help",
+    f: "force",
+    i: "install",
+    g: "global"
   },
   default: {
     config: "skaf.config.js"
