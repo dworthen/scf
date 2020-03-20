@@ -1,9 +1,10 @@
-import { defaultUsage, createUsage } from "./commandUsage";
+import { defaultUsage, createUsage, installUsage } from "./commandUsage";
 import type { ParsedArgs } from "minimist";
 import { createCommand } from './createCommand';
+import { installCommand } from './installCommand';
 
-interface CommandData {
-  command: (argv: ParsedArgs) => Promise<void>;
+export interface CommandData {
+  command: (argv: ParsedArgs) => Promise<any>;
   usage: string;
 }
 
@@ -17,6 +18,11 @@ commands.set("default", {
 commands.set("create", {
   command: createCommand,
   usage: createUsage
+});
+
+commands.set("install", {
+  command: installCommand,
+  usage: installUsage
 });
 
 export function getCommandUsage(command: string) {
