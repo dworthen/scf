@@ -43,10 +43,10 @@ export function readDir(
 
     FileSystem.readFolder(curDirectory).forEach(currentPath => {
       currentPath = path.join(curDirectory, currentPath);
-      if (ig.ignores(currentPath)) return;
+      let relativePath = path.relative(directory, currentPath);
+      if (ig.ignores(relativePath)) return;
 
       let stats = FileSystem.getStatistics(currentPath);
-      let relativePath = path.relative(directory, currentPath);
 
       if(filesShouldBeStrings(files, options)) {
         files.push(relativePath);
