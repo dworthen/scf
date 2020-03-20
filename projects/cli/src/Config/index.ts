@@ -1,3 +1,2 @@
-export * from "./commandOptions";
 export * from "./minimistOptions";
-export * from "./loadSkafConfig";
+export * from "./config";
