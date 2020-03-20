@@ -1,6 +1,7 @@
 import * as path from "path";
 import { validate } from "@dworthen/bycontract";
 import { readDir, FileListing } from "../Utils";
+import type { FileObj } from "../types";
 
 export function loadSkafTemplate(
   from: string,
@@ -19,16 +20,10 @@ export function loadSkafTemplate(
   return files.map(fileListing => {
     return {
       ...fileListing,
+      name: fileListing.relativePath,
       from,
-      to
+      to,
+      format: true
     };
   });
 }
-
-console.log(
-  JSON.stringify(
-    loadSkafTemplate("projects", "app", ["node_modules", ".git"]),
-    undefined,
-    2
-  )
-);
