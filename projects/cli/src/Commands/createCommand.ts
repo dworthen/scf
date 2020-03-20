@@ -38,8 +38,6 @@ export async function createCommand(argv: ParsedArgs): Promise<void> {
     ) as FileObj[];
   }
 
-  console.log(files);
-  console.log(config);
   await Scaffolder.scaffold(files, config.formatter!);
 }
 
