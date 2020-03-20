@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import minimist from "minimist";
-import { minimistOptions } from "./Config";
+import { minimistOptions, loadConfig } from "./Config";
 import { displayUsageInfo, printVersion } from "./bin";
 import { getCommand } from "./Commands";
 
