@@ -17,7 +17,7 @@
   "license": "MIT",
   "dependencies": {
     "@dworthen/bycontract": "^2.0.8",
-    "@skaf/skaf": "3.0.0-alpha.0",
+    "@skaf/core": "3.0.0-alpha.0",
     "command-line-usage": "^6.1.0",
     "find-up": "^4.1.0",
     "minimist": "^1.2.0",

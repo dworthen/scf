@@ -363,7 +363,7 @@
       "versionPolicyName": "skaf"
     },
     {
-      "packageName": "@skaf/skaf",
+      "packageName": "@skaf/core",
       "projectFolder": "projects/scf",
       "versionPolicyName": "skaf"
     }

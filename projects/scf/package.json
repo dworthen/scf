@@ -1,5 +1,5 @@
 {
-  "name": "@skaf/skaf",
+  "name": "@skaf/core",
   "version": "3.0.0-alpha.0",
   "description": "project and file scaffolding",
   "main": "./dist/cjs/index.js",

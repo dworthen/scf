@@ -5,10 +5,10 @@ import * as path from "path";
 import { globalSkafDirectory, Git, Npm } from "../Utils";
 import inquirer from "inquirer";
 import { loadConfig } from "../Config";
-import type { SkafConfig, FileObj } from '@skaf/skaf';
-import { Loader, Scaffolder, PluginPipeline as Pp } from "@skaf/skaf";
+import type { SkafConfig, FileObj } from '@skaf/core';
+import { Loader, Scaffolder, PluginPipeline as Pp } from "@skaf/core";
 import { installCommand } from "./installCommand";
-import { PluginPipeline } from "@skaf/skaf/dist/typings/types";
+import { PluginPipeline } from "@skaf/core/dist/typings/types";
 
 export async function createCommand(argv: ParsedArgs): Promise<void> {
   let [from, to = "."] =

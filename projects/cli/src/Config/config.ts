@@ -1,7 +1,7 @@
 import minimist, { ParsedArgs } from "minimist";
 import findUp from "find-up";
 import path from "path";
-import type { SkafConfig } from "@skaf/skaf";
+import type { SkafConfig } from "@skaf/core";
 
 function _loadConfig() {
   let argv = minimist(process.argv.slice(2));
