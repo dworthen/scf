@@ -1,0 +1,11 @@
+{
+  "changes": [
+    {
+      "packageName": "@skaf/core",
+      "comment": "Version 3 rewrite",
+      "type": "none"
+    }
+  ],
+  "packageName": "@skaf/core",
+  "email": "worthend.derek@gmail.com"
+}
