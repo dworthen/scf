@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/dworthen/scf#readme",
   "devDependencies": {
-    "standard-version": "^4.4.0"
+    "standard-version": "^8.0.1"
   },
   "dependencies": {
     "caporal": "^1.2.0",
