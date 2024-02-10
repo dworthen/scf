@@ -1,0 +1,40 @@
+name: PR
+on:
+  pull_requests:
+    branches:
+      - main
+
+jobs:
+  pr:
+    runs_on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.21.x'
+
+      - uses: arduino/setup-task@v2
+        with:
+          version: 3.x
+
+      - name: Install deps
+        run: |
+          go install golang.org/x/tools/cmd/goimports@latest
+          go install github.com/goreleaser/goreleaser@latest
+          go mod tidy
+
+      - name: Format
+        run: task format-check
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: v1.56
+
+      - name: Build
+        run: task build
+
+      
+
+      
