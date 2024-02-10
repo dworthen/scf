@@ -1,0 +1,19 @@
+{
+    "name": "{{packageJsonName}}",
+    "version": "1.0.0",
+    "description": "Some Project",
+    {{#if esm}}
+    "type": "module",
+    {{else}}
+    "type": "commonjs",
+    {{/if}}
+    "main": "index.js",
+    "exports": {
+        ".": "./index.js"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "MIT"
+}

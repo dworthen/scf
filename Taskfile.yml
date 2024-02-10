@@ -1,0 +1,34 @@
+# https://taskfile.dev
+
+version: "3"
+
+interval: 100ms
+
+tasks:
+  tidy:
+    cmds:
+      - go mod tidy
+
+  format-check:
+    cmds:
+      - goimports -e -l .
+
+  format:
+    cmds:
+      - goimports -w .
+
+  lint:
+    cmds:
+      - golangci-lint run
+
+  build-dev:
+    cmds:
+      - go build -o ./bin/scf .
+
+  build:
+    cmds:
+      - goreleaser build --snapshot --clean
+
+  run:
+    cmds:
+      - go run ./main.go {{.CLI_ARGS}}
