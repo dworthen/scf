@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
 
 permissions:
   contents: write
@@ -17,7 +17,7 @@ jobs:
 
       - uses: actions/setup-go@v5
         with:
-          go-version: '1.21.x'
+          go-version: "1.21.x"
 
       - uses: goreleaser/goreleaser-action@v5
         with:
@@ -27,3 +27,17 @@ jobs:
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    release-js:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+        - uses: actions/setup-node@v3
+          with:
+            node-version: "20"
+        - run: npm install
+        - run: npm run build
+        - uses: JS-DevTools/npm-publish@v3
+          with:
+            token: ${{ secrets.NPM_TOKEN }}
+            access: public

@@ -1,2 +1,5 @@
 bin
+bin-js
 dist
+dist-js
+node_modules

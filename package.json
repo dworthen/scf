@@ -1,0 +1,68 @@
+{
+  "name": "@d-dev/scf",
+  "version": "0.0.1",
+  "description": "NPM installer for https://github.com/dworthen/scf",
+  "type": "module",
+  "main": "./dist-js/index.cjs",
+  "module": "./dist-js/index.js",
+  "types": "./dist-js/types/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist-js/index.cjs",
+      "import": "./dist-js/index.js",
+      "default": "./dist-js/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "scf": "./dist-js/bin.js"
+  },
+  "files": [
+    "dist-js/",
+    "src/",
+    "README.md",
+    "package.json"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "archive-downloader --no-skip",
+    "build:types": "tsc --emitDeclarationOnly --declaration",
+    "build:lib": "tsup",
+    "build": "run-p build:types build:lib"
+  },
+  "archive-downloader": {
+    "url": "https://github.com/dworthen/scf/releases/latest/download/scf_{{platform}}_{{arch}}{{platformExt}}",
+    "dest": "./bin-js",
+    "platform": {
+      "linux": "Linux",
+      "win32": "Windows",
+      "darwin": "Darwin"
+    },
+    "arch": {
+      "x64": "x86_64"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dworthen/scf.git"
+  },
+  "keywords": [
+    "Project",
+    "Scaffolding"
+  ],
+  "author": "Derek Worthen <worthend.derek@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dworthen/scf/issues"
+  },
+  "homepage": "https://github.com/dworthen/scf#readme",
+  "dependencies": {
+    "@d-dev/archive-downloader": "^0.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.17",
+    "npm-run-all": "^4.1.5",
+    "tsup": "^8.0.2",
+    "typescript": "^5.3.3"
+  }
+}
