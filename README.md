@@ -2,6 +2,12 @@
 
 ## Installation
 
+### NPM
+
+```
+npm install @d-dev/scf -g
+```
+
 ### Binaries
 
 #### Windows
