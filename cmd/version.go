@@ -6,6 +6,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/dworthen/scf/versioninfo"
 	"github.com/spf13/cobra"
 )
 
@@ -15,7 +16,9 @@ var versionCmd = &cobra.Command{
 	Short: "Print version",
 	Long:  `Print Version`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("v0.0.4")
+		version, err := versioninfo.GetVersion()
+		cobra.CheckErr(err)
+		fmt.Println(version)
 	},
 }
 
