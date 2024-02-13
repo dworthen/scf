@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/dworthen/goscf/cmd"
+	"github.com/dworthen/scf/cmd"
 	"github.com/mailgun/raymond/v2"
 )
 

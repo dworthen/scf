@@ -22,7 +22,6 @@ type Prompt struct {
 type FileConditions struct {
 	Condition        string   `json:"condition"`
 	Files            []string `json:"files"`
-	Relative         string   `json:"relative"`
 	WorkingDirectory string   `json:"workingDirectory"`
 }
 

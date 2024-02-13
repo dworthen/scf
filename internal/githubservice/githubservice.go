@@ -13,7 +13,7 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/dworthen/goscf/internal/globals"
+	"github.com/dworthen/scf/internal/globals"
 )
 
 const apiUrl string = "https://api.github.com"

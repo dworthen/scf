@@ -1,4 +1,4 @@
-module github.com/dworthen/goscf
+module github.com/dworthen/scf
 
 go 1.21.5
 

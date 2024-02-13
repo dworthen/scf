@@ -7,9 +7,9 @@ import (
 	"strings"
 
 	"github.com/bmatcuk/doublestar/v4"
-	"github.com/dworthen/goscf/internal/githubservice"
-	"github.com/dworthen/goscf/internal/lib"
-	"github.com/dworthen/goscf/internal/prompts"
+	"github.com/dworthen/scf/internal/githubservice"
+	"github.com/dworthen/scf/internal/lib"
+	"github.com/dworthen/scf/internal/prompts"
 	"github.com/mailgun/raymond/v2"
 )
 

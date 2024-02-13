@@ -1,19 +1,18 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
 
-	"github.com/dworthen/goscf/internal/globals"
-	"github.com/dworthen/goscf/internal/scaffolder"
+	"github.com/dworthen/scf/internal/globals"
+	"github.com/dworthen/scf/internal/scaffolder"
 	"github.com/spf13/cobra"
 )
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "scf [SRC] <DEST>",
+	Use:   "scf <SRC> [DEST]",
 	Short: "Scaffold out project files from GitHub",
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
@@ -23,8 +22,6 @@ var rootCmd = &cobra.Command{
 		}
 		scaffolder, err := scaffolder.New(args[0], dest)
 		cobra.CheckErr(err)
-		fmt.Println(os.TempDir())
-		fmt.Printf("%#v\n", scaffolder)
 		err = scaffolder.Scaffold()
 		cobra.CheckErr(err)
 	},
