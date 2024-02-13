@@ -33,10 +33,10 @@ archives:
       - goos: windows
         format: zip
 
+release:
+  draft: true
+  extra_files:
+    - glob: ./version.json
+
 changelog:
-  sort: asc
-  use: github
-  filters:
-    exclude:
-      - "^docs:"
-      - "^test:"
+  disable: true
