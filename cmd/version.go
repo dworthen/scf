@@ -6,7 +6,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/dworthen/scf/versioninfo"
+	"github.com/dworthen/scf/internal/versioninfo"
 	"github.com/spf13/cobra"
 )
 
