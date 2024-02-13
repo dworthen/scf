@@ -36,7 +36,7 @@ archives:
 release:
   draft: true
   extra_files:
-    - glob: ./version.json
+    - glob: ./versioninfo/version.json
 
 changelog:
   disable: true
