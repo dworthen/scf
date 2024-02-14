@@ -1,0 +1,21 @@
+{
+  "version": "0.0.7",
+  "archive": "scf_{{.Os}}_{{.Arch}}{{.ArchiveExt}}",
+  "binary": "scf{{.Ext}}",
+  "os": {
+    "linux": "Linux",
+    "darwin": "Darwin",
+    "windows": "Windows"
+  },
+  "arch": {
+    "Windows": {
+      "amd64": "x86_64"
+    },
+    "Linux": {
+      "amd64": "x86_64"
+    },
+    "Darwin": {
+      "amd64": "x86_64"
+    }
+  }
+}

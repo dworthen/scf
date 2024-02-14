@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 )
 
-//go:embed version.json
+//go:embed updater.config.json
 var versionFileContents string
 
 type VersionInfo struct {
