@@ -216,7 +216,6 @@ func extractTarball(src string, destination string) error {
 
 		path := filepath.Join(destination, getPath(header.Name))
 
-		fmt.Printf("Path: %s\n", path)
 		switch header.Typeflag {
 		case tar.TypeDir:
 			if err := os.MkdirAll(path, 0755); err != nil {
