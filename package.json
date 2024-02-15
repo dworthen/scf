@@ -1,6 +1,6 @@
 {
   "name": "@d-dev/scf",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "NPM installer for https://github.com/dworthen/scf",
   "type": "module",
   "main": "./dist-js/index.cjs",
@@ -25,7 +25,7 @@
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "node ./dist-js/bin.js",
+    "postinstall": "scf",
     "code:check": "biome check ./js/",
     "code:fix": "biome check ./js/ --apply",
     "build:types": "tsc --emitDeclarationOnly --declaration",
