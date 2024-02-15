@@ -19,6 +19,8 @@ var versionCmd = &cobra.Command{
 		version, err := versioninfo.GetVersion()
 		cobra.CheckErr(err)
 		fmt.Println(version)
+		err = versioninfo.PrintAvailableUpdate()
+		cobra.CheckErr(err)
 	},
 }
 

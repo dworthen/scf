@@ -7,6 +7,7 @@ import (
 
 	"github.com/dworthen/scf/internal/globals"
 	"github.com/dworthen/scf/internal/scaffolder"
+	"github.com/dworthen/scf/internal/versioninfo"
 	"github.com/spf13/cobra"
 )
 
@@ -23,6 +24,8 @@ var rootCmd = &cobra.Command{
 		scaffolder, err := scaffolder.New(args[0], dest)
 		cobra.CheckErr(err)
 		err = scaffolder.Scaffold()
+		cobra.CheckErr(err)
+		err = versioninfo.PrintAvailableUpdate()
 		cobra.CheckErr(err)
 	},
 }
