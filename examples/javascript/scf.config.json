@@ -1,0 +1,42 @@
+{
+  "prompts": [
+    {
+      "variableName": "projectName",
+      "type": "prompt",
+      "message": "Project Name",
+      "required": true
+    },
+    {
+      "variableName": "packageJsonName",
+      "type": "prompt",
+      "message": "Package JSON Name",
+      "required": true
+    },
+    {
+      "variableName": "ts",
+      "type": "yesno",
+      "message": "Use TypeScript?"
+    },
+    {
+      "variableName": "esm",
+      "type": "yesno",
+      "message": "Output ESM?"
+    }
+  ],
+  "files": [
+    {
+      "condition": "{{tif ts}}",
+      "workingDirectory": "ts",
+      "files": [
+        "**/*"
+      ]
+    },
+    {
+      "condition": "{{ntif ts}}",
+      "workingDirectory": "js",
+      "files": [
+        "**/*"
+      ]
+    }
+  ]
+}

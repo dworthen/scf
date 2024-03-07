@@ -151,7 +151,7 @@ func copyDir(source string, destination string) error {
 	var data map[string]interface{}
 	var files []prompts.FileConditions
 
-	promptsFilePath := filepath.ToSlash(filepath.Join(source, "scf.prompts.json"))
+	promptsFilePath := filepath.ToSlash(filepath.Join(source, "scf.config.json"))
 	promptFileMatches, err := doublestar.FilepathGlob(promptsFilePath, doublestar.WithFilesOnly())
 	if err != nil {
 		return err
@@ -205,7 +205,7 @@ func copyDir(source string, destination string) error {
 					return err
 				}
 
-				if relativePath == "scf.prompts.json" {
+				if relativePath == "scf.config.json" {
 					continue
 				}
 

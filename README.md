@@ -127,7 +127,7 @@ SCF uses the GitHub API which is [rate limited to 60 requests per hour](https://
 
 ## Creating Project Templates
 
-SCF supports scaffolding out any local directory or remote repo. Nothing special needs to be done to the source directory/files in order to be scaffoldable but SCF does suppot additional features such as user prompts, file templates, and condtional scaffolding. These features are declared in a single config file, `scf.prompts.json`. If present in the source project, SCF will read in the config and act accordingly.
+SCF supports scaffolding out any local directory or remote repo. Nothing special needs to be done to the source directory/files in order to be scaffoldable but SCF does suppot additional features such as user prompts, file templates, and condtional scaffolding. These features are declared in a single config file, `scf.config.json`. If present in the source project, SCF will read in the config and act accordingly.
 
 An example use case may be a javascript project template that support scaffolding out either a JavaScript project structure or a TypeScript project structure. When scaffolding out the files, SCF may prompt users on whether or not the project should use TypeScript and then conditionally scaffold out the appropriate files.
 
@@ -144,7 +144,7 @@ An example use case may be a javascript project template that support scaffoldin
 
 ### Example
 
-**REPO_OWNER/REPO/scf.prompts.json**
+**REPO_OWNER/REPO/scf.config.json**
 
 ```json
 {
@@ -161,7 +161,7 @@ An example use case may be a javascript project template that support scaffoldin
 
 Running `scf REPO_OWNER/REPO` will then prompt the user for a project name.
 
-The `scf.prompts.json` may appear in subdirectories. This is helpful if one wishes to house multiple project templates in a single repo. Running `scf OWNER/REPO/sub/directory` will use the `scf.prompts.json` config at that location if one is present. The `scf.prompts.json` file itself is never scaffolded out into the destination.
+The `scf.config.json` may appear in subdirectories. This is helpful if one wishes to house multiple project templates in a single repo. Running `scf OWNER/REPO/sub/directory` will use the `scf.config.json` config at that location if one is present. The `scf.config.json` file itself is never scaffolded out into the destination.
 
 ## Templates
 
@@ -176,12 +176,12 @@ Prompts on their own are not that useful. SCF supports file templating with [han
     |-- templates
         |-- react-component
             |-- {{componentName}}.jsx.hbs
-            |-- scf.prompts.json
+            |-- scf.config.json
     |-- src
         |-- components
 ```
 
-**./templates/react-component/scf.prompts.json**
+**./templates/react-component/scf.config.json**
 
 ```json
 {
@@ -244,13 +244,13 @@ Since handlebar expressions do not support negation, `ntif` is a convenience to 
 
 ## Conditional Scaffolding
 
-By default, scf will scaffold out all subdirectories and files present in the source to the destination except for the `scf.prompts.json` config file. The config supports an optional `files` field for specifying which files should be scaffolded and under which conditions.
+By default, scf will scaffold out all subdirectories and files present in the source to the destination except for the `scf.config.json` config file. The config supports an optional `files` field for specifying which files should be scaffolded and under which conditions.
 
 ### File Specifier Type
 
 - `files` (Array<string|glob>) [Required]: An array of strings or globs specifying which files should be scaffolded.
 - `condition` (string|handlebars expression) [Optional]: A string or handlebars expression indicating when the associated files should be scaffolded. The files will only be scaffolded if the condition results in the string "true".
-- "workingDirectory" (string) [Optional]: A subdirectory relative to the `scf.prompts.json` file where the files list will be evaluated. The working directory itself will not be scaffolded out to the destination.
+- "workingDirectory" (string) [Optional]: A subdirectory relative to the `scf.config.json` file where the files list will be evaluated. The working directory itself will not be scaffolded out to the destination.
 
 ### Example
 
@@ -264,10 +264,10 @@ By default, scf will scaffold out all subdirectories and files present in the so
                 |-- typescript files to scaffold...
             |-- javascript
                 |-- javascript files to scaffold...
-            |-- scf.prompts.json
+            |-- scf.config.json
 ```
 
-**REPO_OWNER/REPO/javascript-project/scf.prompts.json**
+**REPO_OWNER/REPO/javascript-project/scf.config.json**
 
 ```json
 {
@@ -315,10 +315,10 @@ If any of the handlebar expressions within file paths returns an empty string th
                 |-- typescript files to scaffold...
             |-- {{ntif useTypescript projectName}}
                 |-- javascript files to scaffold...
-            |-- scf.prompts.json
+            |-- scf.config.json
 ```
 
-**REPO_OWNER/REPO/javascript-project/scf.prompts.json**
+**REPO_OWNER/REPO/javascript-project/scf.config.json**
 
 ```json
 {
