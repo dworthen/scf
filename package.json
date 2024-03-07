@@ -1,48 +1,40 @@
 {
   "name": "@d-dev/scf",
-  "version": "0.0.5",
+  "version": "0.0.7",
   "description": "NPM installer for https://github.com/dworthen/scf",
   "type": "module",
-  "main": "./dist-js/index.cjs",
-  "module": "./dist-js/index.js",
-  "types": "./dist-js/types/index.d.ts",
-  "exports": {
-    ".": {
-      "require": "./dist-js/index.cjs",
-      "import": "./dist-js/index.js",
-      "default": "./dist-js/index.js"
-    },
-    "./package.json": "./package.json"
-  },
-  "bin": {
-    "scf": "./dist-js/bin.js"
-  },
   "files": [
-    "dist-js/",
-    "src/",
     "README.md",
     "package.json"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "scf",
-    "code:check": "biome check ./js/",
-    "code:fix": "biome check ./js/ --apply",
-    "build:types": "tsc --emitDeclarationOnly --declaration",
-    "build:lib": "tsup",
-    "build": "run-p build:types build:lib",
-    "ci:check": "run-s code:check"
+    "postinstall": "bin-install"
   },
-  "archive-downloader": {
-    "url": "https://github.com/dworthen/scf/releases/latest/download/scf_{{platform}}_{{arch}}{{platformExt}}",
-    "dest": "./bin-js",
-    "platform": {
-      "linux": "Linux",
+  "bin-install": {
+    "archive": "https://github.com/dworthen/scf/releases/latest/download/scf_{{os}}_{{arch}}{{archiveExt}}",
+    "binary": "scf{{binaryExt}}",
+    "variables": {
+      "version": "1.1.1"
+    },
+    "os": {
       "win32": "Windows",
+      "linux": "Linux",
       "darwin": "Darwin"
     },
     "arch": {
-      "x64": "x86_64"
+      "Windows": {
+        "x64": "x86_64",
+        "arm64": "arm64"
+      },
+      "Linux": {
+        "x64": "x86_64",
+        "arm64": "arm64"
+      },
+      "Darwin": {
+        "x64": "x86_64",
+        "arm64": "arm64"
+      }
     }
   },
   "repository": {
@@ -60,13 +52,6 @@
   },
   "homepage": "https://github.com/dworthen/scf#readme",
   "dependencies": {
-    "@d-dev/archive-downloader": "^0.1.0"
-  },
-  "devDependencies": {
-    "@types/node": "^20.11.17",
-    "biome": "^0.3.3",
-    "npm-run-all": "^4.1.5",
-    "tsup": "^8.0.2",
-    "typescript": "^5.3.3"
+    "@d-dev/bin-install": "^0.1.0"
   }
 }

@@ -162,7 +162,6 @@ func copyDir(source string, destination string) error {
 		if err != nil {
 			return err
 		}
-		fmt.Printf("%#v\n", prompts)
 		data = prompts.Answers
 		files = prompts.Files
 	} else {
@@ -201,13 +200,10 @@ func copyDir(source string, destination string) error {
 			}
 
 			for _, fullPath := range matches {
-				fmt.Println(fullPath)
 				relativePath, err := filepath.Rel(workingDir, fullPath)
 				if err != nil {
 					return err
 				}
-
-				fmt.Println(relativePath)
 
 				if relativePath == "scf.prompts.json" {
 					continue
