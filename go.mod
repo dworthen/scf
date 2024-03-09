@@ -5,7 +5,7 @@ go 1.21.5
 require (
 	github.com/Songmu/prompter v0.5.1
 	github.com/bmatcuk/doublestar/v4 v4.6.1
-	github.com/dworthen/updater v0.0.2
+	github.com/dworthen/updater v0.0.3
 	github.com/mailgun/raymond/v2 v2.0.48
 	github.com/spf13/cobra v1.8.0
 )

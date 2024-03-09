@@ -6,8 +6,8 @@ github.com/cpuguy83/go-md2man/v2 v2.0.3/go.mod h1:tgQtvFlXSQOSOSIRvRPT7W67SCa46t
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/dworthen/updater v0.0.2 h1:1X2npez1spWeM6wQ+Ly2TdnkgUTplbFrwcu7i+E2BcA=
-github.com/dworthen/updater v0.0.2/go.mod h1:ql4XedX6bv2uT2Kpx8kKWzZ0mcjG+HC9k/QbghzT6JY=
+github.com/dworthen/updater v0.0.3 h1:naGOERlbZXq0a3LV3e+KckV6Y7hj8E+EcDwkZCB5HH0=
+github.com/dworthen/updater v0.0.3/go.mod h1:ql4XedX6bv2uT2Kpx8kKWzZ0mcjG+HC9k/QbghzT6JY=
 github.com/google/uuid v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=
 github.com/google/uuid v1.6.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
 github.com/inconshreveable/mousetrap v1.1.0 h1:wN+x4NVGpMsO7ErUn/mUI3vEoE6Jt13X2s0bqwp9tc8=
