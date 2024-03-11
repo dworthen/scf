@@ -31,7 +31,7 @@ tasks:
 
   dev:
     cmds:
-      - wgo -file .go task build -- --single-target
+      - wgo -file .go task build -- --single-target --skip before
 
   run:
     cmds:
