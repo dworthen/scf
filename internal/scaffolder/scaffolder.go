@@ -96,7 +96,7 @@ func (scf *Scaffolder) Scaffold() error {
 	}
 
 	if fileInfo.Mode().IsRegular() {
-		return copyFile(source, filepath.Join(scf.Dest, filepath.Base(source)), map[string]interface{}{})
+		return copyFile(source, filepath.Join(scf.Dest, filepath.Base(source)), true, map[string]interface{}{})
 	}
 
 	if fileInfo.IsDir() {
@@ -106,20 +106,22 @@ func (scf *Scaffolder) Scaffold() error {
 	return nil
 }
 
-func copyFile(source string, destination string, data map[string]interface{}) error {
-	destination = filepath.ToSlash(strings.TrimSuffix(destination, ".hbs"))
+func copyFile(source string, destination string, parse bool, data map[string]interface{}) error {
+	if parse {
+		destination = filepath.ToSlash(strings.TrimSuffix(destination, ".hbs"))
 
-	destination, err := raymond.Render(destination, data)
+		destination, err := raymond.Render(destination, data)
 
-	if strings.Contains(destination, "//") || strings.HasSuffix(destination, "/") {
-		return nil
+		if err != nil {
+			return err
+		}
+
+		if strings.Contains(destination, "//") || strings.HasSuffix(destination, "/") {
+			return nil
+		}
 	}
 
 	destination = filepath.FromSlash(destination)
-
-	if err != nil {
-		return err
-	}
 
 	sourceFile, err := os.ReadFile(source)
 	if err != nil {
@@ -133,7 +135,7 @@ func copyFile(source string, destination string, data map[string]interface{}) er
 
 	var fileContents string
 	ext := filepath.Ext(source)
-	if ext == ".hbs" {
+	if parse && ext == ".hbs" {
 		fileContents, err = raymond.Render(string(sourceFile), data)
 		if err != nil {
 			return err
@@ -178,14 +180,30 @@ func copyDir(source string, destination string) error {
 	matched := false
 
 	for _, fileCondition := range files {
+		workingDir := "./"
+		if fileCondition.WorkingDirectory != "" {
+			workingDir = fileCondition.WorkingDirectory
+		}
+		workingDir = filepath.Join(source, workingDir)
+		workingDir = filepath.FromSlash(workingDir)
+
+		includeGlob := ""
+		excludeGlob := ""
+
+		if fileCondition.Parse.Include != "" {
+			filePattern := filepath.FromSlash(fileCondition.Parse.Include)
+			fullSource := filepath.Join(workingDir, filePattern)
+			includeGlob = filepath.ToSlash(fullSource)
+		}
+
+		if fileCondition.Parse.Exclude != "" {
+			filePattern := filepath.FromSlash(fileCondition.Parse.Exclude)
+			fullSource := filepath.Join(workingDir, filePattern)
+			excludeGlob = filepath.ToSlash(fullSource)
+		}
+
 		for _, fileGlob := range fileCondition.Files {
 
-			workingDir := "./"
-			if fileCondition.WorkingDirectory != "" {
-				workingDir = fileCondition.WorkingDirectory
-			}
-			workingDir = filepath.Join(source, workingDir)
-			workingDir = filepath.FromSlash(workingDir)
 			filePattern := filepath.FromSlash(fileGlob)
 			fullSource := filepath.Join(workingDir, filePattern)
 			fullSourceGlobPattern := filepath.ToSlash(fullSource)
@@ -209,7 +227,23 @@ func copyDir(source string, destination string) error {
 					continue
 				}
 
-				err = copyFile(fullPath, filepath.Join(destination, relativePath), data)
+				parse := true
+				if includeGlob != "" {
+					parse, err = doublestar.Match(includeGlob, fullPath)
+					if err != nil {
+						return err
+					}
+				}
+
+				if excludeGlob != "" {
+					match, err := doublestar.Match(excludeGlob, fullPath)
+					if err != nil {
+						return err
+					}
+					parse = !match
+				}
+
+				err = copyFile(fullPath, filepath.Join(destination, relativePath), parse, data)
 				if err != nil {
 					return err
 				}

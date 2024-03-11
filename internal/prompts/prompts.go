@@ -19,10 +19,16 @@ type Prompt struct {
 	Required     bool        `json:"required"`
 }
 
+type ParseOptions struct {
+	Include string `json:"include"`
+	Exclude string `json:"exclude"`
+}
+
 type FileConditions struct {
-	Condition        string   `json:"condition"`
-	Files            []string `json:"files"`
-	WorkingDirectory string   `json:"workingDirectory"`
+	Condition        string       `json:"condition"`
+	Files            []string     `json:"files"`
+	WorkingDirectory string       `json:"workingDirectory"`
+	Parse            ParseOptions `json:"parse"`
 }
 
 type PromptFile struct {
