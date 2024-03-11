@@ -109,9 +109,9 @@ func (scf *Scaffolder) Scaffold() error {
 func copyFile(source string, dest string, parse bool, data map[string]interface{}) error {
 	destination := dest
 	if parse {
-		destination = filepath.ToSlash(strings.TrimSuffix(destination, ".hbs"))
+		dest = filepath.ToSlash(strings.TrimSuffix(dest, ".hbs"))
 
-		destination, err := raymond.Render(destination, data)
+		dest, err := raymond.Render(dest, data)
 
 		if err != nil {
 			return err
@@ -120,6 +120,7 @@ func copyFile(source string, dest string, parse bool, data map[string]interface{
 		if strings.Contains(destination, "//") || strings.HasSuffix(destination, "/") {
 			return nil
 		}
+		destination = dest
 	}
 
 	destination = filepath.FromSlash(destination)

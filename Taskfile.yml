@@ -27,7 +27,11 @@ tasks:
 
   build:
     cmds:
-      - goreleaser build --snapshot --clean
+      - goreleaser build --snapshot --clean {{.CLI_ARGS}}
+
+  dev:
+    cmds:
+      - wgo -file .go task build -- --single-target
 
   run:
     cmds:
