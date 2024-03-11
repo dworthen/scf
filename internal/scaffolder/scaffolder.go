@@ -231,14 +231,14 @@ func copyDir(source string, destination string) error {
 
 				parse := true
 				if includeGlob != "" {
-					parse, err = doublestar.Match(includeGlob, fullPath)
+					parse, err = doublestar.Match(includeGlob, filepath.ToSlash(fullPath))
 					if err != nil {
 						return err
 					}
 				}
 
 				if excludeGlob != "" {
-					match, err := doublestar.Match(excludeGlob, fullPath)
+					match, err := doublestar.Match(excludeGlob, filepath.ToSlash(fullPath))
 					if err != nil {
 						return err
 					}
