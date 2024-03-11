@@ -106,7 +106,8 @@ func (scf *Scaffolder) Scaffold() error {
 	return nil
 }
 
-func copyFile(source string, destination string, parse bool, data map[string]interface{}) error {
+func copyFile(source string, dest string, parse bool, data map[string]interface{}) error {
+	destination := dest
 	if parse {
 		destination = filepath.ToSlash(strings.TrimSuffix(destination, ".hbs"))
 
