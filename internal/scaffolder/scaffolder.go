@@ -100,6 +100,12 @@ func (scf *Scaffolder) Scaffold() error {
 	}
 
 	if fileInfo.IsDir() {
+
+		err := os.MkdirAll(scf.Dest, 0755)
+		if err != nil {
+			return err
+		}
+
 		return copyDir(source, scf.Dest)
 	}
 
@@ -161,13 +167,19 @@ func copyDir(source string, destination string) error {
 		return err
 	}
 
+	var promptData *prompts.Prompts
+
 	if len(promptFileMatches) > 0 {
-		prompts, err := prompts.New(promptFileMatches[0])
+		promptData, err = prompts.New(promptFileMatches[0])
 		if err != nil {
 			return err
 		}
-		data = prompts.Answers
-		files = prompts.Files
+		data = promptData.Answers
+		files = promptData.Files
+		err = promptData.RunPreCommands(destination)
+		if err != nil {
+			return err
+		}
 	} else {
 		data = map[string]interface{}{}
 		files = []prompts.FileConditions{
@@ -255,7 +267,8 @@ func copyDir(source string, destination string) error {
 
 	if !matched {
 		return fmt.Errorf("No files matched the provided globs to scaffold. Globs: %v, Directory: %s", files, source)
+	} else {
+		err = promptData.RunPostCommands(destination)
+		return err
 	}
-
-	return nil
 }

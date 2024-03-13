@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"os/exec"
 	"strings"
 
 	"github.com/Songmu/prompter"
@@ -31,15 +32,22 @@ type FileConditions struct {
 	Parse            ParseOptions `json:"parse"`
 }
 
+type Commands struct {
+	PreScaffold  []string `json:"preScaffold"`
+	PostScaffold []string `json:"postScaffold"`
+}
+
 type PromptFile struct {
-	Prompts []Prompt         `json:"prompts"`
-	Files   []FileConditions `json:"files"`
+	Prompts  []Prompt         `json:"prompts"`
+	Files    []FileConditions `json:"files"`
+	Commands Commands         `json:"commands"`
 }
 
 type Prompts struct {
-	Prompts []Prompt
-	Answers map[string]interface{}
-	Files   []FileConditions
+	Prompts  []Prompt
+	Answers  map[string]interface{}
+	Files    []FileConditions
+	Commands Commands
 }
 
 func New(promptFilePath string) (*Prompts, error) {
@@ -142,13 +150,64 @@ func (promptFile *PromptFile) RunPrompts() (*Prompts, error) {
 		}
 	}
 
+	preCommands, err := parseCommands(promptFile.Commands.PreScaffold, answers)
+	if err != nil {
+		return nil, err
+	}
+	postCommands, err := parseCommands(promptFile.Commands.PostScaffold, answers)
+	if err != nil {
+		return nil, err
+	}
+
 	prompts := Prompts{
 		Prompts: promptFile.Prompts,
 		Answers: answers,
 		Files:   files,
+		Commands: Commands{
+			PreScaffold:  preCommands,
+			PostScaffold: postCommands,
+		},
 	}
 
 	return &prompts, nil
+}
+
+func parseCommands(cmds []string, data map[string]interface{}) ([]string, error) {
+	parsedCmds := []string{}
+	for _, rawCmd := range cmds {
+		cmd, err := raymond.Render(rawCmd, data)
+		if err != nil {
+			return []string{}, err
+		}
+		parsedCmds = append(parsedCmds, cmd)
+	}
+	return parsedCmds, nil
+}
+
+func runCmds(cmds []string, directory string) error {
+	if len(cmds) > 0 {
+		fmt.Println("Running preScaffold commands...")
+	}
+	for _, cmd := range cmds {
+		fmt.Println(cmd)
+		cmds := strings.Split(cmd, " ")
+		cmdStructure := exec.Command(cmds[0], cmds[1:]...)
+		cmdStructure.Dir = directory
+		out, err := cmdStructure.Output()
+		if err != nil {
+			return err
+		}
+		fmt.Println(string(out))
+	}
+	return nil
+}
+
+func (prompts *Prompts) RunPreCommands(directory string) error {
+	return runCmds(prompts.Commands.PreScaffold, directory)
+}
+
+func (prompts *Prompts) RunPostCommands(directory string) error {
+	return runCmds(prompts.Commands.PostScaffold, directory)
 }
 
 func (prompt *Prompt) Validate() error {
