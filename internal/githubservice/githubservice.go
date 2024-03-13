@@ -36,7 +36,47 @@ type commit struct {
 
 type commitResponse = []commit
 
-func GetCommit(repo string) (string, error) {
+func getSingleCommit(repo string, ref string) (string, error) {
+	requestUrl := fmt.Sprintf("%s/repos/%s/commits/%s", apiUrl, repo, ref)
+	authHeader := getAuthHeader()
+
+	request, err := http.NewRequest("GET", requestUrl, nil)
+	if err != nil {
+		return "", err
+	}
+	if authHeader != "" {
+		request.Header.Set("Authorization", authHeader)
+	}
+
+	httpClient := &http.Client{}
+	resp, err := httpClient.Do(request)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != 200 {
+		return "", fmt.Errorf("Error getting repo commit. Status Code: %d, Response: %#v", resp.StatusCode, resp)
+	}
+
+	responseBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+
+	var commitData commit
+	err = json.Unmarshal(responseBody, &commitData)
+	if err != nil {
+		return "", nil
+	}
+
+	return commitData.Sha, nil
+}
+
+func GetCommit(repo string, ref string) (string, error) {
+	if ref != "" {
+		return getSingleCommit(repo, ref)
+	}
+
 	requestUrl := fmt.Sprintf("%s/repos/%s/commits", apiUrl, repo)
 	authHeader := getAuthHeader()
 

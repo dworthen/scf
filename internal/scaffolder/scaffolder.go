@@ -58,7 +58,7 @@ func New(src string, dest string) (*Scaffolder, error) {
 
 func setLocalPaths(scf *Scaffolder) error {
 
-	repo, subDirectory, err := lib.GetRepoAndSubDirectory(scf.Src)
+	repoData, err := lib.GetRepoData(scf.Src)
 	if err != nil {
 		return err
 	}
@@ -68,17 +68,17 @@ func setLocalPaths(scf *Scaffolder) error {
 		return nil
 	}
 
-	commitHash, err := githubservice.GetCommit(repo)
+	commitHash, err := githubservice.GetCommit(repoData.Repo, repoData.Ref)
 	if err != nil {
 		return err
 	}
 
-	repoPath := filepath.FromSlash(repo)
+	repoPath := filepath.FromSlash(repoData.Repo)
 
 	scf.CommitHash = commitHash
-	scf.Repo = repo
+	scf.Repo = repoData.Repo
 	scf.LocalProjectRoot = filepath.Join(homeDir, ".scf", "github", repoPath, commitHash)
-	scf.ContentsToCopy = subDirectory
+	scf.ContentsToCopy = repoData.SubDirectoryToCopy
 
 	return nil
 }
@@ -267,8 +267,9 @@ func copyDir(source string, destination string) error {
 
 	if !matched {
 		return fmt.Errorf("No files matched the provided globs to scaffold. Globs: %v, Directory: %s", files, source)
-	} else {
-		err = promptData.RunPostCommands(destination)
-		return err
+	} else if promptData != nil {
+		return promptData.RunPostCommands(destination)
 	}
+
+	return nil
 }

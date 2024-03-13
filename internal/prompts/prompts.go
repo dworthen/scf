@@ -186,7 +186,7 @@ func parseCommands(cmds []string, data map[string]interface{}) ([]string, error)
 
 func runCmds(cmds []string, directory string) error {
 	if len(cmds) > 0 {
-		fmt.Println("Running preScaffold commands...")
+		fmt.Println("Running commands...")
 	}
 	for _, cmd := range cmds {
 		fmt.Println(cmd)
