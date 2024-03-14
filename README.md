@@ -1,5 +1,9 @@
 # SCF - Simple project and file scaffolding
 
+Scaffold out local or remote (from GitHub) project templates.
+
+## Examples
+
 Scaffold this repo's contents to `./testing` directory.
 
 ```bash
@@ -26,6 +30,12 @@ scf OWNER/PRIVATE-REPO --gh-token TOKEN...
 SCF_GH_TOKEN=TOKEN scf ...
 ```
 
+Scaffold from specific GitHub reference (commit hash, branch name, or tag).
+
+```bash
+scf OWNER/REPO@HASH|BRANCH_NAME|TAG
+```
+
 Scaffold from local templates
 
 ```bash
@@ -39,6 +49,7 @@ scf ./templates/controller ./controllers/
 - Scaffold private GitHub repos with the use of GitHub Personal Access Tokens.
 - User prompts.
 - File templating.
+- Commands. Run pre and/or post scaffolding commands, e.g., `npm install`.
 - Conditional scaffolding.
 
 ## Inspiration
@@ -49,7 +60,8 @@ Inspired by [degit](https://github.com/Rich-Harris/degit) with some differences:
 - Since it uses the GitHub API, SCF does not support other git hosts.
 - Supports private GitHub repos with the use of GitHub PATs.
 - Supports prompts, templating, and conditional scaffolding.
-- Supports scaffolding from local sources. Think scaffolding out repeatable boilerplate code that may be specific to a project, such as components, controllers, models, services, or file patterns to aid open source contributors, etc. The templates can be within a project repo and checked into source control that way all developers can use the same templates and patterns for new files.
+- Commands. Run pre and/or post scaffolding commands, e.g., `npm install`.
+- Scaffolding from local sources.
 
 ## Installation
 
@@ -127,7 +139,7 @@ SCF uses the GitHub API which is [rate limited to 60 requests per hour](https://
 
 ## Creating Project Templates
 
-SCF supports scaffolding out any local directory or remote repo. Nothing special needs to be done to the source directory/files in order to be scaffoldable but SCF does suppot additional features such as user prompts, file templates, and condtional scaffolding. These features are declared in a single config file, `scf.config.json`. If present in the source project, SCF will read in the config and act accordingly.
+SCF supports scaffolding out any local directory or remote repo. Nothing special needs to be done to the source directory/files in order to be scaffoldable but SCF does suppot additional features such as user prompts, file templates, commands, and condtional scaffolding. These features are declared in a single config file, `scf.config.json`. If present in the source project, SCF will read in the config and act accordingly.
 
 An example use case may be a javascript project template that support scaffolding out either a JavaScript project structure or a TypeScript project structure. When scaffolding out the files, SCF may prompt users on whether or not the project should use TypeScript and then conditionally scaffold out the appropriate files.
 
@@ -138,9 +150,9 @@ An example use case may be a javascript project template that support scaffoldin
 - `variableName` (string) [Required]: The name of the variable for storing the user response.
 - `type` (string) [Required]: `prompt` | `choose` | `password` | `yn` | `yesno`
 - `default` (string|boolean|number) [Optional]: default value for the prompt. The type should correspond to the type of prompt.
-- `message` [Required]: The message to prompt the user.
-- `options` [Required if type == `choose`]: Options to present for the `choose` type prompt.
-- `required` [Optional]: A boolean to indicate if an answer is required. Defaults to `false`
+- `message` (string) [Required]: The message to prompt the user.
+- `options` (string[]) [Required if type == `choose`]: Options to present for the `choose` type prompt.
+- `required` (boolean) [Optional]: A boolean to indicate if an answer is required. Defaults to `false`
 
 ### Example
 
@@ -205,6 +217,8 @@ export const {{componentName}} = function {{componentName}}() {
 ```
 
 Running `scf ./templates/react-component ./src/components` within the project root will prompt the user for a component name and then use that name to create `./src/components/COMPONENT_NAME.jsx`. This example demonstrates using handlebars for file naming as well as file contents. Handlebars can be used anywhere in the file path for dynamically naming directories or files.
+
+This example also demonstrates scaffolding content from local templates. The templates directory could be tracked with source control allowing all devs on a team to scaffold out new files using the same templates.
 
 Be sure to view the full list of [built in handlebar helpers](https://github.com/mailgun/raymond?tab=readme-ov-file#built-in-helpers) made available by mailgun/raymond.
 
@@ -343,6 +357,35 @@ If any of the handlebar expressions within file paths returns an empty string th
 Now running `scf REPO_ONWER/REPO/templates/javascript-project` will create a directory within the current working directory with the name stored in the `projectName` prompt and either scaffold out the typescript or javascript contents based on the prompt response.
 
 I personally don't recommend this approach for conditionally scaffolding since it can lead to longer, messier file paths and makes it less clear as to which files will be scaffolded out and when. I prefer explicitly specifying how files should be scaffolded out within the config file.
+
+## Commands
+
+### Commands Type
+
+- `preScaffold` (Array<string|handlebars expressions>) [Optional]: A list of commands to run after creating the destination directory but prior to scaffolding out content. Commands will run in the destination directory. Commands can be handlebar expressions, e.g., `npm install {{packageName}}`.
+- `postScaffold` (string[]) [Optional]: Same as `preScaffold` option.
+
+### Example
+
+**scf.config.json**
+
+```json
+{
+  "prompts": [
+    {
+      "variableName": "packageName",
+      "type": "prompt",
+      "message": "Name a package to install",
+      "required": true
+    },
+  ],
+  "commands": {
+    "postScaffold": [
+      "npm install {{packageName}}"
+    ]
+  }
+}
+```
 
 ## Examples
 

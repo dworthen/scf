@@ -38,5 +38,10 @@
         "**/*"
       ]
     }
-  ]
+  ],
+  "commands": {
+    "postScaffold": [
+      "npm install"
+    ]
+  }
 }

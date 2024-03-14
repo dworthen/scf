@@ -1,6 +1,6 @@
 {
   "name": "@d-dev/scf",
-  "version": "0.0.7",
+  "version": "0.1.0",
   "description": "NPM installer for https://github.com/dworthen/scf",
   "type": "module",
   "files": [
