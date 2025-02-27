@@ -1,17 +1,17 @@
 [project]
 name = "python-scaffolder"
-version = "0.2.4"
+version = "0.2.5"
 description = "Add your description here"
 readme = "README.md"
 authors = [{ name = "Derek Worthen", email = "worthend.derek@gmail.com" }]
 requires-python = ">=3.11"
 dependencies = [
-  "python-scaffolder-win32-x64==0.2.4; sys_platform == 'win32' and platform_machine == 'AMD64'",
-  "python-scaffolder-win32-arm64==0.2.4; sys_platform == 'win32' and platform_machine == 'ARM64'",
-  "python-scaffolder-linux-x64==0.2.4; sys_platform == 'linux' and platform_machine == 'x86_64'",
-  "python-scaffolder-linux-arm64==0.2.4; sys_platform == 'linux' and platform_machine == 'aarch64'",
-  "python-scaffolder-darwin-x64==0.2.4; sys_platform == 'darwin' and platform_machine == 'x86_64'",
-  "python-scaffolder-darwin-arm64==0.2.4; sys_platform == 'darwin' and platform_machine == 'arm64'",
+  "python-scaffolder-win32-x64==0.2.5; sys_platform == 'win32' and platform_machine == 'AMD64'",
+  "python-scaffolder-win32-arm64==0.2.5; sys_platform == 'win32' and platform_machine == 'ARM64'",
+  "python-scaffolder-linux-x64==0.2.5; sys_platform == 'linux' and platform_machine == 'x86_64'",
+  "python-scaffolder-linux-arm64==0.2.5; sys_platform == 'linux' and platform_machine == 'aarch64'",
+  "python-scaffolder-darwin-x64==0.2.5; sys_platform == 'darwin' and platform_machine == 'x86_64'",
+  "python-scaffolder-darwin-arm64==0.2.5; sys_platform == 'darwin' and platform_machine == 'arm64'",
 ]
 
 [build-system]
