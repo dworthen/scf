@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/dworthen/scf/cmd"
+	"github.com/dworthen/scf/internal/cmd"
 	"github.com/mailgun/raymond/v2"
 )
 
@@ -55,6 +55,22 @@ func main() {
 		}
 
 		return ""
+	})
+
+	raymond.RegisterHelper("bool", func(value interface{}) bool {
+		return raymond.IsTrue(value)
+	})
+
+	raymond.RegisterHelper("not", func(value interface{}) bool {
+		return !raymond.IsTrue(value)
+	})
+
+	//coment
+	raymond.RegisterHelper("eq", func(a interface{}, b interface{}) bool {
+		aVal := raymond.Str(a)
+		bVal := raymond.Str(b)
+
+		return aVal == bVal
 	})
 
 	cmd.Execute()

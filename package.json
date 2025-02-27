@@ -1,57 +1,13 @@
 {
-  "name": "@d-dev/scf",
-  "version": "0.1.0",
-  "description": "NPM installer for https://github.com/dworthen/scf",
-  "type": "module",
-  "files": [
-    "README.md",
-    "package.json"
-  ],
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "bin-install"
-  },
-  "bin-install": {
-    "archive": "https://github.com/dworthen/scf/releases/latest/download/scf_{{os}}_{{arch}}{{archiveExt}}",
-    "binary": "scf{{binaryExt}}",
-    "variables": {
-      "version": "1.1.1"
+    "name": "scf",
+    "private": true,
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
     },
-    "os": {
-      "win32": "Windows",
-      "linux": "Linux",
-      "darwin": "Darwin"
-    },
-    "arch": {
-      "Windows": {
-        "x64": "x86_64",
-        "arm64": "arm64"
-      },
-      "Linux": {
-        "x64": "x86_64",
-        "arm64": "arm64"
-      },
-      "Darwin": {
-        "x64": "x86_64",
-        "arm64": "arm64"
-      }
-    }
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/dworthen/scf.git"
-  },
-  "keywords": [
-    "Project",
-    "Scaffolding"
-  ],
-  "author": "Derek Worthen <worthend.derek@gmail.com>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/dworthen/scf/issues"
-  },
-  "homepage": "https://github.com/dworthen/scf#readme",
-  "dependencies": {
-    "@d-dev/bin-install": "^0.1.0"
-  }
+    "keywords": [],
+    "author": "",
+    "license": "ISC"
 }

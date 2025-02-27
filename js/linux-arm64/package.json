@@ -1,0 +1,32 @@
+{
+    "name": "@d-dev/scf-linux-arm64",
+    "version": "0.2.2",
+    "description": "",
+    "type": "module",
+    "main": "index.js",
+    "exports": {
+        ".": {
+            "import": "./index.js"
+        },
+        "./package.json": "./package.json"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "os": [
+        "linux"
+    ],
+    "cpu": [
+        "arm64"
+    ],
+    "keywords": [],
+    "author": "",
+    "license": "MIT",
+    "files": [
+        "package.json",
+        "README.md",
+        "license",
+        "bin",
+        "index.js"
+    ]
+}

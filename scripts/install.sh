@@ -16,13 +16,16 @@ declare -A platformDict=(
 )
 
 declare -A archDict=(
+    ["amd64"]="x86_64"
 	["x86_64"]="x86_64"
+    ["arm64"] = "arm64"
+    ["aarch64"] = "arm64"
     # ["x86_64"]="x86_64"
 )
 
 help() {
   cat <<'EOF'
-Install a binary release of a binary hosted on GitHub
+Install scf
 
 USAGE:
     install [options]
@@ -114,16 +117,14 @@ arch=$(uname -m)
 if [ ! ${platformDict[$platform]+_} ]; then
     err "$plaform not supported"
     exit 1
-else
-    platform=${platformDict[$platform]}
 fi
+platform=${platformDict[$platform]}
 
 if [ ! ${archDict[$arch]+_} ]; then
     err "$arch not supported"
     exit 1
-else
-    arch=${archDict[$arch]}
 fi
+arch=${archDict[$arch]}
 
 downloadUrl=$(echo $downloadUrl |
     sed -E "s/\{PLATFORM\}/${platform}/g" |

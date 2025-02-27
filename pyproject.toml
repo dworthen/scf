@@ -1,0 +1,19 @@
+[project]
+name = "scf-app"
+classifiers = ["Private :: Do Not Upload"]
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = []
+
+[tool.uv.workspace]
+members = ["python/*"]
+
+[tool.uv.sources]
+python-scaffolder-win32-x64 = { workspace = true }
+python-scaffolder-win32-arm64 = { workspace = true }
+python-scaffolder-darwin-arm64 = { workspace = true }
+python-scaffolder-darwin-x64 = { workspace = true }
+python-scaffolder-linux-arm64 = { workspace = true }
+python-scaffolder-linux-x64 = { workspace = true }

@@ -2,12 +2,30 @@
 
 version: "3"
 
-interval: 100ms
+dotenv:
+  - .env
 
 tasks:
-  tidy:
+  tidy-go:
+    internal: true
     cmds:
       - go mod tidy
+
+  tidy-js:
+    internal: true
+    cmds:
+      - pnpm install
+
+  tidy-py:
+    internal: true
+    cmds:
+      - uv sync --all-packages
+
+  tidy:
+    deps:
+      - tidy-go
+      - tidy-js
+      - tidy-py
 
   format-check:
     cmds:
@@ -21,17 +39,34 @@ tasks:
     cmds:
       - golangci-lint run
 
-  build-dev:
+  build-go:
     cmds:
-      - go build -o ./bin/scf .
+      - go tool goreleaser build {{.CLI_ARGS}}
+
+  build-py:
+    internal: true
+    cmds:
+      - uv build --all-packages
 
   build:
     cmds:
-      - goreleaser build --snapshot --clean {{.CLI_ARGS}}
+      - task: build-go
+        vars:
+          CLI_ARGS: "--snapshot --clean --skip before"
+      - go run ./buildscripts/postbuild/postbuild.go
+      - task: build-py
+
+  release:
+    cmds:
+      - go tool goreleaser release
+      - go run ./buildscripts/postbuild/postbuild.go
+      - task: build-py
+      - pnpm publish -r --access public
+      - uv publish
 
   dev:
     cmds:
-      - wgo -file .go task build -- --single-target --skip before
+      - go tool wgo -file .go go tool task build-go -- --single-target --skip before --snapshot --clean
 
   run:
     cmds:
@@ -39,4 +74,4 @@ tasks:
 
   add-command:
     cmds:
-      - cobra-cli add {{.CLI_ARGS}}
+      - scf ./templates/command ./internal/cmd

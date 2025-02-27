@@ -1,0 +1,72 @@
+version = 1
+requires-python = ">=3.11"
+
+[manifest]
+members = [
+    "python-scaffolder",
+    "python-scaffolder-darwin-arm64",
+    "python-scaffolder-darwin-x64",
+    "python-scaffolder-linux-arm64",
+    "python-scaffolder-linux-x64",
+    "python-scaffolder-win32-arm64",
+    "python-scaffolder-win32-x64",
+    "scf-app",
+]
+
+[[package]]
+name = "python-scaffolder"
+version = "0.2.2"
+source = { editable = "python/scf" }
+dependencies = [
+    { name = "python-scaffolder-darwin-arm64", marker = "platform_machine == 'arm64' and sys_platform == 'darwin'" },
+    { name = "python-scaffolder-darwin-x64", marker = "platform_machine == 'x86_64' and sys_platform == 'darwin'" },
+    { name = "python-scaffolder-linux-arm64", marker = "platform_machine == 'aarch64' and sys_platform == 'linux'" },
+    { name = "python-scaffolder-linux-x64", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
+    { name = "python-scaffolder-win32-arm64", marker = "platform_machine == 'ARM64' and sys_platform == 'win32'" },
+    { name = "python-scaffolder-win32-x64", marker = "platform_machine == 'AMD64' and sys_platform == 'win32'" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "python-scaffolder-darwin-arm64", marker = "platform_machine == 'arm64' and sys_platform == 'darwin'", editable = "python/darwin-arm64" },
+    { name = "python-scaffolder-darwin-x64", marker = "platform_machine == 'x86_64' and sys_platform == 'darwin'", editable = "python/darwin-x64" },
+    { name = "python-scaffolder-linux-arm64", marker = "platform_machine == 'aarch64' and sys_platform == 'linux'", editable = "python/linux-arm64" },
+    { name = "python-scaffolder-linux-x64", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'", editable = "python/linux-x64" },
+    { name = "python-scaffolder-win32-arm64", marker = "platform_machine == 'ARM64' and sys_platform == 'win32'", editable = "python/win32-arm64" },
+    { name = "python-scaffolder-win32-x64", marker = "platform_machine == 'AMD64' and sys_platform == 'win32'", editable = "python/win32-x64" },
+]
+
+[[package]]
+name = "python-scaffolder-darwin-arm64"
+version = "0.2.2"
+source = { editable = "python/darwin-arm64" }
+
+[[package]]
+name = "python-scaffolder-darwin-x64"
+version = "0.2.2"
+source = { editable = "python/darwin-x64" }
+
+[[package]]
+name = "python-scaffolder-linux-arm64"
+version = "0.2.2"
+source = { editable = "python/linux-arm64" }
+
+[[package]]
+name = "python-scaffolder-linux-x64"
+version = "0.2.2"
+source = { editable = "python/linux-x64" }
+
+[[package]]
+name = "python-scaffolder-win32-arm64"
+version = "0.2.2"
+source = { editable = "python/win32-arm64" }
+
+[[package]]
+name = "python-scaffolder-win32-x64"
+version = "0.2.2"
+source = { editable = "python/win32-x64" }
+
+[[package]]
+name = "scf-app"
+version = "0.1.0"
+source = { virtual = "." }

@@ -1,21 +1,24 @@
 {
-  "version": "0.1.0",
-  "archive": "scf_{{.Os}}_{{.Arch}}{{.ArchiveExt}}",
-  "binary": "scf{{.Ext}}",
-  "os": {
-    "linux": "Linux",
-    "darwin": "Darwin",
-    "windows": "Windows"
-  },
-  "arch": {
-    "Windows": {
-      "amd64": "x86_64"
+    "version": "0.2.2",
+    "archive": "scf_{{.Os}}_{{.Arch}}{{.ArchiveExt}}",
+    "binary": "scf{{.Ext}}",
+    "os": {
+        "linux": "Linux",
+        "darwin": "Darwin",
+        "windows": "Windows"
     },
-    "Linux": {
-      "amd64": "x86_64"
-    },
-    "Darwin": {
-      "amd64": "x86_64"
+    "arch": {
+        "Windows": {
+            "amd64": "x86_64",
+            "arm64": "arm64"
+        },
+        "Linux": {
+            "amd64": "x86_64",
+            "arm64": "arm64"
+        },
+        "Darwin": {
+            "amd64": "x86_64",
+            "arm64": "arm64"
+        }
     }
-  }
 }

@@ -17,25 +17,49 @@ jobs:
 
       - uses: actions/setup-go@v5
         with:
-          go-version: "1.21.x"
+          go-version: "1.24.x"
 
-      - uses: goreleaser/goreleaser-action@v5
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
         with:
-          # either 'goreleaser' (default) or 'goreleaser-pro':
-          distribution: goreleaser
-          version: latest
-          args: release --clean
+          version: 10
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          # Install a specific version of uv.
+          version: "0.6.3"
+
+      - name: Set up Python
+        run: uv python install
+
+      - name: Install deps
+        run: |
+          go mod tidy
+          go tool task tidy
+
+      - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: go tool task release
 
-  release-js:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
-        with:
-          node-version: "20"
-      - uses: JS-DevTools/npm-publish@v3
-        with:
-          token: ${{ secrets.NPM_TOKEN }}
-          access: public
+    #   - uses: goreleaser/goreleaser-action@v5
+    #     with:
+    #       # either 'goreleaser' (default) or 'goreleaser-pro':
+    #       distribution: goreleaser
+    #       version: latest
+    #       args: release --clean
+    #     env:
+    #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#   release-js:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v4
+#       - uses: actions/setup-node@v3
+#         with:
+#           node-version: "20"
+#       - uses: JS-DevTools/npm-publish@v3
+#         with:
+#           token: ${{ secrets.NPM_TOKEN }}
+#           access: public
