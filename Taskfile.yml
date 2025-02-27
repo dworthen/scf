@@ -61,7 +61,7 @@ tasks:
       - go tool goreleaser release
       - go run ./buildscripts/postbuild/postbuild.go
       - task: build-py
-      - pnpm publish -r --access public
+      - pnpm publish -r --access public --no-git-checks
       - uv publish
 
   dev:
