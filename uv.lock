@@ -15,7 +15,7 @@ members = [
 
 [[package]]
 name = "python-scaffolder"
-version = "0.2.5"
+version = "0.2.6"
 source = { editable = "python/scf" }
 dependencies = [
     { name = "python-scaffolder-darwin-arm64", marker = "platform_machine == 'arm64' and sys_platform == 'darwin'" },
@@ -38,32 +38,32 @@ requires-dist = [
 
 [[package]]
 name = "python-scaffolder-darwin-arm64"
-version = "0.2.5"
+version = "0.2.6"
 source = { editable = "python/darwin-arm64" }
 
 [[package]]
 name = "python-scaffolder-darwin-x64"
-version = "0.2.5"
+version = "0.2.6"
 source = { editable = "python/darwin-x64" }
 
 [[package]]
 name = "python-scaffolder-linux-arm64"
-version = "0.2.5"
+version = "0.2.6"
 source = { editable = "python/linux-arm64" }
 
 [[package]]
 name = "python-scaffolder-linux-x64"
-version = "0.2.5"
+version = "0.2.6"
 source = { editable = "python/linux-x64" }
 
 [[package]]
 name = "python-scaffolder-win32-arm64"
-version = "0.2.5"
+version = "0.2.6"
 source = { editable = "python/win32-arm64" }
 
 [[package]]
 name = "python-scaffolder-win32-x64"
-version = "0.2.5"
+version = "0.2.6"
 source = { editable = "python/win32-x64" }
 
 [[package]]

@@ -19,22 +19,22 @@ importers:
   js/scf:
     optionalDependencies:
       '@d-dev/scf-darwin-arm64':
-        specifier: 0.2.5
+        specifier: 0.2.6
         version: link:../darwin-arm64
       '@d-dev/scf-darwin-x64':
-        specifier: 0.2.5
+        specifier: 0.2.6
         version: link:../darwin-x64
       '@d-dev/scf-linux-arm64':
-        specifier: 0.2.5
+        specifier: 0.2.6
         version: link:../linux-arm64
       '@d-dev/scf-linux-x64':
-        specifier: 0.2.5
+        specifier: 0.2.6
         version: link:../linux-x64
       '@d-dev/scf-win32-arm64':
-        specifier: 0.2.5
+        specifier: 0.2.6
         version: link:../win32-arm64
       '@d-dev/scf-win32-x64':
-        specifier: 0.2.5
+        specifier: 0.2.6
         version: link:../win32-x64
 
   js/win32-arm64: {}

@@ -1,6 +1,6 @@
 {
   "name": "@d-dev/scf-linux-arm64",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "",
   "type": "module",
   "main": "index.js",

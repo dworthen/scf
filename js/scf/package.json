@@ -1,6 +1,6 @@
 {
   "name": "@d-dev/scf",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "type": "module",
   "description": "",
   "main": "index.js",
@@ -24,11 +24,11 @@
   "author": "",
   "license": "MIT",
   "optionalDependencies": {
-    "@d-dev/scf-win32-arm64": "0.2.5",
-    "@d-dev/scf-win32-x64": "0.2.5",
-    "@d-dev/scf-darwin-arm64": "0.2.5",
-    "@d-dev/scf-darwin-x64": "0.2.5",
-    "@d-dev/scf-linux-arm64": "0.2.5",
-    "@d-dev/scf-linux-x64": "0.2.5"
+    "@d-dev/scf-win32-arm64": "0.2.6",
+    "@d-dev/scf-win32-x64": "0.2.6",
+    "@d-dev/scf-darwin-arm64": "0.2.6",
+    "@d-dev/scf-darwin-x64": "0.2.6",
+    "@d-dev/scf-linux-arm64": "0.2.6",
+    "@d-dev/scf-linux-x64": "0.2.6"
   }
 }
