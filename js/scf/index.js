@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { spawn } from "node:child_process";
+import { chmod } from "node:fs/promises";
 
 const supported_platforms = new Map([
   ["win32-arm64", "@d-dev/scf-win32-arm64"],
@@ -22,6 +23,7 @@ async function run() {
   const args = process.argv.slice(2);
   const { default: getBinPath } = await import(supported_platforms.get(key));
   const binPath = getBinPath();
+  await chmod(binPath, 0o774);
   spawn(binPath, args, { stdio: "inherit" });
 }
 

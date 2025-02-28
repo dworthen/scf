@@ -31,10 +31,7 @@ def get_path() -> Path:
 
 def run() -> None:
     path = get_path()
-    print(path)
-    print(sys.argv)
-    print(sys.platform)
-    print(platform.machine())
+    path.chmod(0o774)
     subprocess.run([path, *sys.argv[1:]], check=True)
 
 

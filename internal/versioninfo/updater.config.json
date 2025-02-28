@@ -1,5 +1,5 @@
 {
-  "version": "0.2.6",
+  "version": "0.2.7",
   "archive": "scf_{{.Os}}_{{.Arch}}{{.ArchiveExt}}",
   "binary": "scf{{.Ext}}",
   "os": {
