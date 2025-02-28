@@ -16,10 +16,10 @@ declare -A platformDict=(
 )
 
 declare -A archDict=(
-    ["amd64"]="x86_64"
-	["x86_64"]="x86_64"
-    ["arm64"] = "arm64"
-    ["aarch64"] = "arm64"
+  ["amd64"]="x86_64"
+  ["x86_64"]="x86_64"
+  ["arm64"]="arm64"
+  ["aarch64"]="arm64"
     # ["x86_64"]="x86_64"
 )
 
