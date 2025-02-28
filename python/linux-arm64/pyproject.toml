@@ -1,6 +1,6 @@
 [project]
 name = "python-scaffolder-linux-arm64"
-version = "0.2.7"
+version = "0.2.8"
 description = "Add your description here"
 readme = "README.md"
 authors = [{ name = "Derek Worthen", email = "worthend.derek@gmail.com" }]
